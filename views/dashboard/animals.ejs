@@ -1,0 +1,58 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow animate__fadeInUp">
+ <div class="row">
+  <div class="col-md-12">
+   <div class="card  card-tasks">
+    <div class="card-header">
+     <a href="/app/#/animais/form" type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>
+      Novo</a>
+     <h5 class="card-category">Animais</h5>
+     <h4 class="card-title">Lista</h4>
+    </div>
+    <div class="card-body ">
+     <div class="table-full-width table-responsive">
+      <table id='teste' class="table">
+       <form>
+        <div class="input-group no-border">
+         <input type="text" value="" class="form-control" placeholder="Pesquisar...">
+         <div class="input-group-append">
+          <div class="input-group-text">
+           <i class="now-ui-icons ui-1_zoom-bold"></i>
+          </div>
+         </div>
+        </div>
+       </form>
+       <thead>
+        <tr>
+         <th>Nome</th>
+         <th>Phone Number</th>
+         <th class="d-none d-md-table-cell">Date of Birth</th>
+         <th>Actions</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>Vanessa Tucker</td>
+         <td>864-348-0485</td>
+         <td>June 21, 1961</td>
+         <td>
+          <a href="#"><i class="fa fa-pencil"></i></a>
+          <a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></i></a>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="card-footer ">
+     <hr>
+     <div class="stats">
+      <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+<%- include("script/animals") %>
