@@ -9,8 +9,15 @@ var jwt = require('jsonwebtoken');
 const indexRoute = require('./routes/index');
 const authRoute = require('./routes/auth');
 const appRoute = require('./routes/app');
-const listsRoute = require('./routes/listing');
-const usersRoute = require('./routes/users');
+
+//api
+const animalsRoute = require('./routes/api/animals');
+const breedsRoute = require('./routes/api/breeds');
+const originsRoute = require('./routes/api/origins');
+const personsRoute = require('./routes/api/persons');
+const speciesRoute = require('./routes/api/species');
+const usersRoute = require('./routes/api/users');
+
 
 const app = express();
 // Setamos que nossa engine será o ejs
@@ -35,48 +42,54 @@ app.use(express.static(__dirname + '/public'));
 
 // public routes
 app.use('/', indexRoute);
-app.use('/users', usersRoute);
 app.use('/auth', authRoute);
 
 // private routes
 app.use('/app', appRoute);
-app.use('/listings', validateUser, listsRoute);
+
+//api routes
+app.use('/api/animals', validateUser, animalsRoute);
+app.use('/api/breeds', validateUser, breedsRoute);
+app.use('/api/origins', validateUser, originsRoute);
+app.use('/api/persons', validateUser, personsRoute);
+app.use('/api/species', validateUser, speciesRoute);
+app.use('/api/users', usersRoute);
 
 app.get('/favicon.ico', function (req, res) {
-    res.sendStatus(204);
+ res.sendStatus(204);
 });
 
 // user validation
 function validateUser(req, res, next) {
-    jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
-        if (err) {
-            res.status(401).json({ message: err.message, data: null });
-        } else {
-            // add user id to request
-            req.body.id = decoded.id;
-            next();
-        }
-    });
+ jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  if (err) {
+   res.status(401).json({ message: err.message, data: null });
+  } else {
+   // add user id to request
+   req.body.userId = decoded.id;
+   next();
+  }
+ });
 }
 
 // express doesn't consider not found 404 as an error so we need to handle 404 explicitly
 // handle 404 error
 app.use(function (req, res, next) {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+ let err = new Error('Not Found');
+ err.status = 404;
+ next(err);
 });
 
 // handle errors
 app.use(function (err, req, res, next) {
-    console.log(err);
+ console.log(err);
 
-    if (err.status === 404)
-        res.status(404).json({ message: "Not found" });
-    else
-        res.status(500).json({ message: "Something looks wrong" });
+ if (err.status === 404)
+  res.status(404).json({ message: "Não encontrado" });
+ else
+  res.status(500).json({ message: "Ocorreu algum erro" });
 });
 
 app.listen(port, () => {
-    console.log("Server listening on port " + port);
+ console.log("Server listening on port " + port);
 });

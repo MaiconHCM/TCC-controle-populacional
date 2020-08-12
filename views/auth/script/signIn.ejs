@@ -1,0 +1,16 @@
+<script>
+ //Efetua login
+ page.signIn = function () {
+  let email = $('input[name=email]').val();
+  let password = $('input[name=password]').val();
+
+  $.post("/api/users/authenticate", { email, password }, function (data) {
+   if (data.status === 'success') {
+    window.localStorage.setItem('x-access-token', data.data.token);
+    window.location.href = '/app/#/inicio';
+   } else {
+    alert('error');
+   }
+  });
+ }
+</script>

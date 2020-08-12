@@ -21,8 +21,9 @@
 
  // Carrega nova pagina baseado no hash(#) da url
  app.load = function () {
-  let page = this.getHashUrl();
-  let cacheHTML = app.getCache(page);
+  page = {};
+  let hash = this.getHashUrl();
+  let cacheHTML = app.getCache(hash);
   if (cacheHTML) {
    $('#content').html(cacheHTML);
    app.activeMenu();
@@ -32,9 +33,9 @@
    if (token) {
     $.ajaxSetup({ headers: { 'x-access-token': token } });
    }
-   $.get("/app/" + page, function (data) {
+   $.get("/app/" + hash, function (data) {
     $('#content').html(data);
-    app.setCache(page, data);
+    app.setCache(hash, data);
     app.activeMenu();
    }).fail(function (data) {
     switch (data.status) {
@@ -50,17 +51,17 @@
   if (window.location.hash === '' || (window.location.hash).search("/") === -1 || window.location.hash === '#/') {
    window.location.href = '/app/#/inicio';
   }
-  let page = window.location.hash;
-  return page.replace('#/', '');
+  let hash = window.location.hash;
+  return hash.replace('#/', '');
  }
 
  //Carrega menu
  app.activeMenu = function () {
-  let page = app.getHashUrl();
-  page = page.split('/');
+  let hash = app.getHashUrl();
+  hash = hash.split('/');
   $('#sidebar-wrapper > ul > li.active').removeClass('active');
-  $('#menu-' + page[0]).addClass('active');
-  if (page[1]) {
+  $('#menu-' + hash[0]).addClass('active');
+  if (hash[1]) {
 
   }
  }
@@ -68,10 +69,39 @@
   $('#navbar_userName').text(data.user);
  }
 
- app.isUrl = function () {
-
+ app.validadeNull = function (object) {
+  for (const property in object) {
+   if (object[property] == '') {
+    return false;
+   }
+  }
+  return true;
  }
+ app.pad = function (num, size) {
+  var s = "000000000" + num;
+  return s.substr(s.length - size);
+ }
+ app.getUrlParameter = function (name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  var results = regex.exec(app.getHashUrl());
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+ };
 
+ app.statusInfo = function (key = '') {
+  switch (key.toLowerCase()) {
+   case 'success':
+    let time = new Date();
+    $('#data-status').html('<i class="fas fa-check wow animate__fadeIn text-success"></i> Atualizado as ' + app.pad(time.getHours(), 2) + ':' + app.pad(time.getMinutes(), 2));
+    break;
+   case 'error':
+    $('#data-status').html('<i class="fas fa-times wow animate__fadeIn text-danger"></i> Ocorreu um erro.');
+    break;
+   default:
+    $('#data-status').html('<i class="now-ui-icons loader_refresh spin wow animate__fadeIn text-info"></i> Atualizando...');
+    break;
+  }
+ }
  //Ao iniciar
  $(document).ready(function () {
   window.onhashchange = function () {

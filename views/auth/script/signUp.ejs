@@ -1,0 +1,23 @@
+<script>
+ //Efetua o cadastro.
+ page.signUp = function () {
+  let name = $('input[name=name]').val();
+  let password = $('input[name=password]').val();
+  let email = $('input[name=email]').val();
+
+  $.post("/api/users/register", { name, password, email }, function (data) {
+   if (data.status === 'success') {
+    $.post("/users/authenticate", { email, password }, function (data) {
+     if (data.status === 'success') {
+      window.localStorage.setItem('x-access-token', data.data.token);
+      window.location.href = '/app/#/inicio';
+     } else {
+      alert('error');
+     }
+    });
+   } else {
+    alert('error');
+   }
+  });
+ }
+</script>

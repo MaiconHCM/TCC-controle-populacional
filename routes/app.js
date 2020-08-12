@@ -5,36 +5,54 @@ var jwt = require('jsonwebtoken');
 
 //não autenticado
 router.get('/', function (req, res, next) {
-  res.render('dashboard/layout', { title: 'Início' });
-});
-router.get('/404', function (req, res, next) {
-  res.render('dashboard/404', { title: 'Erro 404' });
+ res.render('dashboard/index', { title: 'Início' });
 });
 
-//Autheticado
+//Home
 router.get('/inicio', validateUser, function (req, res, next) {
-  res.render('dashboard/home', { title: 'Início', user: req.body.user });
+ res.render('dashboard/home/index', { title: 'Início', user: req.body.user });
 });
+
+//Meu perfil
+router.get('/meu-perfil', validateUser, function (req, res, next) {
+ res.render('dashboard/profile/index', { title: 'Meu perfil', user: req.body.user });
+});
+
+//Animais
 router.get('/animais', validateUser, function (req, res, next) {
-  res.render('dashboard/animals', { title: 'Animais', user: req.body.user });
+ res.render('dashboard/animals/index', { title: 'Animais', user: req.body.user });
 });
 router.get('/animais/form', validateUser, function (req, res, next) {
-  res.render('dashboard/animalsForm', { title: 'Formulário Animais', user: req.body.user });
+ res.render('dashboard/animals/form', { title: 'Formulário Animais', user: req.body.user });
 });
-router.get('/meu-perfil', validateUser, function (req, res, next) {
-  res.render('dashboard/profile', { title: 'Meu perfil', user: req.body.user });
+router.get('/animais/form', validateUser, function (req, res, next) {
+ res.render('dashboard/animals/form', { title: 'Formulário Animais', user: req.body.user });
 });
 
+//Especies
+router.get('/especies', validateUser, function (req, res, next) {
+ res.render('dashboard/species/index', { title: 'Espécies', user: req.body.user });
+});
+router.get('/especies/form', validateUser, function (req, res, next) {
+ res.render('dashboard/species/form', { title: 'Formulário Especies', user: req.body.user });
+});
+
+//Páginas padrões
+router.get('/404', validateUser, function (req, res, next) {
+ res.render('dashboard/404', { title: 'Erro 404' });
+});
+
+
+///Funções
 //verifca token
 function validateUser(req, res, next) {
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
-    if (err) {
-      res.status(401).json({ message: err.message, data: null });
-    } else {
-      req.body.user = decoded;
-      console.log('\n\n' + JSON.stringify(decoded) + '\n\n')
-      next();
-    }
-  });
+ jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  if (err) {
+   res.status(401).json({ message: err.message, data: null });
+  } else {
+   req.body.user = decoded;
+   next();
+  }
+ });
 }
 module.exports = router;

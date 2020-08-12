@@ -3,11 +3,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 //Define a schema
-const Schema = mongoose.Schema;
-const UserSchema = new Schema({
+const schema = new mongoose.Schema({
  name: {
   type: String,
-  trim: true,  
+  trim: true,
   required: true,
  },
  email: {
@@ -23,9 +22,9 @@ const UserSchema = new Schema({
 });
 
 // hash user password before saving into database
-UserSchema.pre('save', function(next){
-this.password = bcrypt.hashSync(this.password, saltRounds);
-next();
+schema.pre('save', function (next) {
+ this.password = bcrypt.hashSync(this.password, saltRounds);
+ next();
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', schema);

@@ -1,0 +1,104 @@
+<script>
+ page.requestURL = "/api/species/"
+
+ //Save event
+ page.save = function () {
+  let name = $('input[name=name]').val();
+  if (!app.validadeNull({ name })) {
+   Swal.fire(
+    'Preencha todos campos!',
+    'É necessário preencher os campos.',
+    'warning'
+   )
+   return false;
+  }
+  let id = app.getUrlParameter('id');
+  let send = { name }
+  if (id) {
+   page.update(id, send);
+  } else {
+   page.new(send);
+  }
+
+ }
+
+ //new event
+ page.new = function (send) {
+  $.post(page.requestURL, send, function (response) {
+   let title = 'Ocorreu algum erro!';
+   if (response.status === 'success') {
+    Swal.fire(
+     'Sucesso!',
+     response.message,
+     'success'
+    )
+    $('input[name=name]').val('');
+   } else {
+    Swal.fire(
+     'Ocorreu algum problema!',
+     response.message,
+     'warning'
+    )
+   }
+  }).fail(function (data) {
+   Swal.fire(
+    'Ocorreu algum erro!',
+    response.message,
+    'error'
+   )
+  });
+ }
+
+ //update event
+ page.update = function (id, send) {
+  $.ajax({
+   url: page.requestURL + id,
+   type: 'PUT',
+   data: send,
+   processData: true,
+   success: function (response) {
+    window.location.href=window.location.href;
+    if (response.status === 'success') {
+     Swal.fire(
+      'Sucesso!',
+      response.message,
+      'success'
+     )
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }
+  })
+ }
+
+ //load page event
+ page.load = function () {
+  let id = app.getUrlParameter('id');
+  if (app.getUrlParameter('id')) {
+   $.get(page.requestURL + id, function (response) {
+    let title = 'Ocorreu algum erro!';
+    if (response.status === 'success') {
+     $('input[name=name]').val(response.data.name);
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }).fail(function () {
+    Swal.fire(
+     'Ocorreu algum erro!',
+     'Não foi possivel carregar obter esse registro.',
+     'error'
+    )
+   });
+  }
+ }
+
+ page.load();
+</script>
