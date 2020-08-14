@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 
 var schema = new mongoose.Schema({
  //Internal:
- name: String,
+ name: { type: String, required: true },
  dateBirth: { type: Date },
- sex: { type: Number, min: 0, max: 2 },
- email: String,
- phone: Number,
- cellPhone: Number,
+ sex: { type: Number, min: 0, max: 2, default: 2 },
+ email: { type: String, required: true },
+ telephone: Number,
+ cellPhone: { type: Number, required: true },
  cep: String,
+ neighborhood: String,
  address: String,
  number: Number,
  complement: String,

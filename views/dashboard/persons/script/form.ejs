@@ -1,0 +1,51 @@
+<script>
+ page = new Form("/api/persons/");
+ page.fields = {
+  name: { input: $('input[name=name]'), required: true },
+  dateBirth: {
+   input: $('input[name=dateBirth]'),
+   setValue: function (value) {
+    let date = new Date(value);
+    date.setDate(date.getDate() + 1);
+    $(this.input).val(date.getFullYear() + '-' + app.pad(date.getMonth() + 1, 2) + '-' + app.pad(date.getDate(), 2));
+   }
+  },
+  sex: { input: $('select[name=sex]') },
+  email: { input: $('input[name=email]'), required: true },
+  telephone: { input: $('input[name=telephone]') },
+  cellPhone: { input: $('input[name=cellphone]'), required: true },
+  cep: { input: $('input[name=cep]') },
+  neighborhood: { input: $('input[name=neighborhood]') },
+  address: { input: $('input[name=address]') },
+  number: { input: $('input[name=number]') },
+  complement: { input: $('input[name=complement]') },
+  city: { input: $('input[name=city]') },
+  state: { input: $('input[name=state]') },
+  cpf: { input: $('input[name=cpf]') },
+  rg: { input: $('input[name=rg]') }
+ };
+ //load page event
+ page.load = function () {
+  let id = app.getUrlParameter('id');
+  if (app.getUrlParameter('id')) {
+   $.get(page.requestURL + id, function (response) {
+    if (response.status === 'success') {
+     page.loadFieldsValues(response.data);
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }).fail(function () {
+    Swal.fire(
+     'Ocorreu algum erro!',
+     'Não foi possivel obter esse registro.',
+     'error'
+    )
+   });
+  }
+ }
+ page.load();
+</script>

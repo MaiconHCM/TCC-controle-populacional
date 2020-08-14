@@ -1,0 +1,26 @@
+<script>
+  page = new List("/api/origins/");
+  page.list = function (data) {
+    let a = '';
+    for (const prop in data) {
+      const item = data[prop];
+      a +=
+        '<tr>' +
+        '<td>' + item.name + '</td>' +
+        '<td colspan="2" class="text-right">' +
+        '<a href="http://localhost:3000/app/#/origens/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
+        '<i class="fas fa-pencil-alt"></i> Editar' +
+        '</a>' +
+        '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
+        '<i class="fas fa-trash"></i> Apagar' +
+        '</button>' +
+        '</td>' +
+        '</tr>';
+    }
+    if (a === '') {
+      a = "<tr><td>Não possuí nenhum registro.</td></tr>"
+    }
+    $('#data-view').html(a);
+  }
+  page.filter();
+</script>

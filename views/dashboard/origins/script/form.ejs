@@ -1,0 +1,30 @@
+<script>
+ page = new Form("/api/origins/");
+ page.fields = {
+  name: { input: $('input[name=name]'), required: true },
+ };
+ //load page event
+ page.load = function () {
+  let id = app.getUrlParameter('id');
+  if (app.getUrlParameter('id')) {
+   $.get(page.requestURL + id, function (response) {
+    if (response.status === 'success') {
+     page.loadFieldsValues(response.data);
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }).fail(function () {
+    Swal.fire(
+     'Ocorreu algum erro!',
+     'Não foi possivel obter esse registro.',
+     'error'
+    )
+   });
+  }
+ }
+ page.load();
+</script>

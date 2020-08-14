@@ -2,6 +2,7 @@ const express = require("express");
 const port = 3000;
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
+const minifyHTML = require('express-minify-html');
 const logger = require('morgan');
 var jwt = require('jsonwebtoken');
 
@@ -32,7 +33,18 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Listing', { useNewUrlParser: true });
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
+app.use(minifyHTML({
+  override: true,
+  exception_url: false,
+  htmlMinifier: {
+    removeComments: true,
+    collapseWhitespace: true,
+    collapseBooleanAttributes: true,
+    removeAttributeQuotes: true,
+    removeEmptyAttributes: true,
+    minifyJS: true
+  }
+}));
 app.use(logger('dev'));
 app.use(expressLayouts);
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,40 +68,40 @@ app.use('/api/species', validateUser, speciesRoute);
 app.use('/api/users', usersRoute);
 
 app.get('/favicon.ico', function (req, res) {
- res.sendStatus(204);
+  res.sendStatus(204);
 });
 
 // user validation
 function validateUser(req, res, next) {
- jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
-  if (err) {
-   res.status(401).json({ message: err.message, data: null });
-  } else {
-   // add user id to request
-   req.body.userId = decoded.id;
-   next();
-  }
- });
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+    if (err) {
+      res.status(401).json({ message: err.message, data: null });
+    } else {
+      // add user id to request
+      req.body.userId = decoded.id;
+      next();
+    }
+  });
 }
 
 // express doesn't consider not found 404 as an error so we need to handle 404 explicitly
 // handle 404 error
 app.use(function (req, res, next) {
- let err = new Error('Not Found');
- err.status = 404;
- next(err);
+  let err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // handle errors
 app.use(function (err, req, res, next) {
- console.log(err);
+  console.log(err);
 
- if (err.status === 404)
-  res.status(404).json({ message: "Não encontrado" });
- else
-  res.status(500).json({ message: "Ocorreu algum erro" });
+  if (err.status === 404)
+    res.status(404).json({ message: "Não encontrado" });
+  else
+    res.status(500).json({ message: "Ocorreu algum erro" });
 });
 
 app.listen(port, () => {
- console.log("Server listening on port " + port);
+  console.log("Server listening on port " + port);
 });

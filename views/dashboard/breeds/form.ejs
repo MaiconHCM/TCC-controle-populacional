@@ -1,0 +1,42 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow wow animate__fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Raça</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Qual é a espécie?</label>
+                <select name="specie" class="form-control">
+                  <option value="">Selecione...</option>
+                  <% for(var i=0; i < species.length; i++) { %>
+                  <option value="<%= species[i]._id %>"><%= species[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Nome da raça</label>
+                <input name="name" type="text" class="form-control" placeholder="Determine a nome da raça">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 pr-1 text-center">
+              <a href="/app/#/racas/" class="btn btn-lg btn-secondary"><i class="fas fa-arrow-left"></i>
+                Voltar</a>
+              <button class="btn btn-lg btn-primary" onclick="page.save()"><i class="fa fa-plus"></i>
+                Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("script/form") %>
