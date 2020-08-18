@@ -1,12 +1,15 @@
 const express = require('express');
+const router = express.Router();
 const speciesController = require('../controllers/species');
 const originsController = require('../controllers/origins');
-const router = express.Router();
+const breedsController = require('../controllers/breeds');
+const personsController = require('../controllers/persons');
+const roles = require('../roles');
 var jwt = require('jsonwebtoken');
 
 //não autenticado
 router.get('/', function (req, res, next) {
- res.render('dashboard/index', { title: 'Início' });
+ res.render('dashboard/base/index');
 });
 
 //Home
@@ -24,15 +27,28 @@ router.get('/meu-perfil', validateUser, function (req, res, next) {
 });
 
 //Animais
-router.get('/animais', validateUser, function (req, res, next) {
- res.render('dashboard/animals/index', {}, function (err, html) {
-  res.json({ title: 'Animais', html });
- });
+router.get('/animais', validateUser, async function (req, res, next) {
+ try {
+  let species = await speciesController.getAllArray();
+  let breeds = await breedsController.getAllArray();
+  let origins = await originsController.getAllArray();
+  res.render('dashboard/animals/index', {}, function (err, html) {
+   res.json({ title: 'Animais', variables: { species, breeds, origins }, html });
+  });
+ } catch (e) { console.log(e) }
+
 });
-router.get('/animais/form', validateUser, function (req, res, next) {
- res.render('dashboard/animals/form', {}, function (err, html) {
-  res.json({ title: 'Formulário Animais', html });
- });
+
+router.get('/animais/form', validateUser, async function (req, res, next) {
+ try {
+  let species = await speciesController.getAllArray();
+  let breeds = await breedsController.getAllArray();
+  let origins = await originsController.getAllArray();
+  let persons = await personsController.getAllArray();
+  res.render('dashboard/animals/form', { species, origins, persons }, function (err, html) {
+   res.json({ title: 'Formulário Animais', variables: { breeds }, html });
+  });
+ } catch (e) { console.log(e) }
 });
 
 //Especies
@@ -52,7 +68,7 @@ router.get('/racas', validateUser, async function (req, res, next) {
  try {
   let species = await speciesController.getAllArray();
   res.render('dashboard/breeds/index', {}, function (err, html) {
-   res.json({ title: 'Raças', variables:{species}, html });
+   res.json({ title: 'Raças', variables: { species }, html });
   });
  } catch (e) { console.log(e) }
 });
@@ -67,35 +83,26 @@ router.get('/racas/form', validateUser, async function (req, res, next) {
 
 //Origens
 router.get('/origens', validateUser, async function (req, res, next) {
- try {
-  res.render('dashboard/origins/index', {}, function (err, html) {
-   res.json({ title: 'Origens', html });
-  });
- } catch (e) { console.log(e) }
+ res.render('dashboard/origins/index', {}, function (err, html) {
+  res.json({ title: 'Origens', html });
+ });
 });
 router.get('/origens/form', validateUser, async function (req, res, next) {
- try {
-  let species = await speciesController.getAllArray();
-  res.render('dashboard/origins/form', {}, function (err, html) {
-   res.json({ title: 'Formulário Origens', html });
-  });
- } catch (e) { console.log(e) }
+ res.render('dashboard/origins/form', {}, function (err, html) {
+  res.json({ title: 'Formulário Origens', html });
+ });
 });
 
 //Pessoas
-router.get('/pessoas', validateUser, async function (req, res, next) {
- try {
-  res.render('dashboard/persons/index', {}, function (err, html) {
-   res.json({ title: 'Pessoas', html });
-  });
- } catch (e) { console.log(e) }
+router.get('/pessoas', validateUser, function (req, res, next) {
+ res.render('dashboard/persons/index', {}, function (err, html) {
+  res.json({ title: 'Pessoas', html });
+ });
 });
-router.get('/pessoas/form', validateUser, async function (req, res, next) {
- try {
-  res.render('dashboard/persons/form',{}, function (err, html) {
-   res.json({ title: 'Formulário Pessoas', html });
-  });
- } catch (e) { console.log(e) }
+router.get('/pessoas/form', validateUser, function (req, res, next) {
+ res.render('dashboard/persons/form', {}, function (err, html) {
+  res.json({ title: 'Formulário Pessoas', html });
+ });
 });
 
 //Páginas padrões
@@ -104,17 +111,38 @@ router.get('/404', validateUser, function (req, res, next) {
   res.json({ title: 'Erro 404', html });
  });
 });
+router.get('/403', function (req, res, next) {
+ res.render('dashboard/403', {}, function (err, html) {
+  res.json({ title: 'Erro 403', html });
+ });
+});
 
 
 ///Funções
-//verifca token
+//verifica token
 function validateUser(req, res, next) {
  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
   if (err) {
    res.status(401).json({ message: err.message, data: null });
   } else {
-   req.body.user = decoded;
-   next();
+   if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
+    res.status(403).json({ message: "Permissão insuficiente para seu usuário", data: null });
+   } else {
+    next();
+   }
+  }
+ });
+}
+function generateMenuUser(req, res, next) {
+ jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  if (err) {
+   res.status(401).json({ message: err.message, data: null });
+  } else {
+   if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
+    res.status(403).json({ message: "Permissão insuficiente para seu usuário", data: null });
+   } else {
+    next();
+   }
   }
  });
 }
