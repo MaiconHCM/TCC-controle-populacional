@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
 const minifyHTML = require('express-minify-html');
 const logger = require('morgan');
+const roles = require('./roles');
 var jwt = require('jsonwebtoken');
 
 //routes
@@ -30,7 +31,11 @@ app.set('secretKey', 'Pato Branco (16/07/2020)');
 // DB connection
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Listing', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/Listing', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+});
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(minifyHTML({
@@ -77,9 +82,14 @@ function validateUser(req, res, next) {
     if (err) {
       res.status(401).json({ message: err.message, data: null });
     } else {
-      // add user id to request
-      req.body.userId = decoded.id;
-      next();
+      //Verify role of user.
+      if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
+        res.status(401).json({ message: "Permissão insuficiente!", data: null });
+      } else {
+        // add user id to request
+        req.body.userId = decoded.id;
+        next();
+      }
     }
   });
 }
@@ -95,7 +105,6 @@ app.use(function (req, res, next) {
 // handle errors
 app.use(function (err, req, res, next) {
   console.log(err);
-
   if (err.status === 404)
     res.status(404).json({ message: "Não encontrado" });
   else

@@ -1,3 +1,5 @@
+const { compareSync } = require("bcrypt");
+
 module.exports = function (model) {
   return {
     getById: function (req, res, next) {
@@ -45,7 +47,17 @@ module.exports = function (model) {
       //adiciona cria variavel params e define autores e informações do body
       let params = Object.assign(req.body, author);
 
+      //remove array
+      const a=params;
+      for (const key in a) {
+        if(key.indexOf('[]') !== -1){
+          params[key.replace('[]','')]=a[key];
+          delete params[key];
+        }
+      }
+
       //encontra modelo e atualiza
+      console.log(params);
       model.findByIdAndUpdate(req.params.id, params, function (err, listingInfo) {
         if (err)
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
@@ -71,8 +83,18 @@ module.exports = function (model) {
 
       //adiciona cria variavel params e define autores e informações do body
       let params = Object.assign(req.body, author);
-
+      
+      //remove array
+      let a=params;
+      for (const key in a) {
+        if(key.indexOf('[]') !== -1){
+          params[key.replace('[]','')]=a[key];
+          delete params[key];
+        }
+      }
+      
       //Cria modelo
+      console.log(params);
       model.create(params, function (err, result) {
         if (err)
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });

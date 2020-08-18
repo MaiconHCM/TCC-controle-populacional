@@ -1,88 +1,53 @@
 <script>
- page.requestURL = "/api/animals/"
-
- //Save event
- page.save = function () {
-  let name = $('input[name=name]').val();
-  if (!app.validadeNull({ name })) {
-   Swal.fire(
-    'Preencha todos campos!',
-    'É necessário preencher os campos.',
-    'warning'
-   )
-   return false;
-  }
-  let id = app.getUrlParameter('id');
-  let send = { name }
-  if (id) {
-   page.update(id, send);
-  } else {
-   page.new(send);
-  }
-
- }
-
- //new event
- page.new = function (send) {
-  $.post(page.requestURL, send, function (response) {
-   let title = 'Ocorreu algum erro!';
-   if (response.status === 'success') {
-    Swal.fire(
-     'Sucesso!',
-     response.message,
-     'success'
-    )
-    $('input[name=name]').val('');
-   } else {
-    Swal.fire(
-     'Ocorreu algum problema!',
-     response.message,
-     'warning'
-    )
+ page = new Form("/api/animals/");
+ page.fields = {
+  name: { input: $('input[name=name]'), required: true },
+  owner: { input: $('select[name=owner]') },
+  specie: { input: $('select[name=specie]'), required: true },
+  breed: {
+   input: $('select[name=breed]'), required: true, setValue: function (value) {
+    page.loadBreeds();
+    $(this.input).selectpicker('val', value);
    }
-  }).fail(function (data) {
-   Swal.fire(
-    'Ocorreu algum erro!',
-    response.message,
-    'error'
-   )
-  });
- }
+  },
+  origin: { input: $('select[name=origin]'), required: true },
+  age: { input: $('input[name=age]') },
+  sex: { input: $('select[name=sex]') },
+  castrated: { input: $('select[name=castrated]') },
+  coat: { input: $('select[name=coat]') },
+  size: { input: $('select[name=size]') },
+  color: { input: $('input[name=color]') },
+  weight: { input: $('input[name=weight]') },
+  chipNumber: { input: $('input[name=chipNumber]') },
+  comments: { input: $('textarea[name=comments]') },
+ };
+ page.loadBreeds = function () {
+  const specie = $('select[name=specie]').val();
+  const list = app.variables.breeds;
+  const breeds = list.filter(function (a) { return a.specie === specie; });
+  let append = '';
+  let a = false;
+  for (const key in breeds) {
+   append += '<option value="' + breeds[key]._id + '">' + breeds[key].name + '</option>';
+   a = true;
+  }
+  $('select[name=breed]').html(append);
+  if (a)
+   $('select[name=breed]').removeAttr('disabled');
+  else
+   $('select[name=breed]').attr('disabled', true);
 
- //update event
- page.update = function (id, send) {
-  $.ajax({
-   url: page.requestURL + id,
-   type: 'PUT',
-   data: send,
-   processData: true,
-   success: function (response) {
-    window.location.href=window.location.href;
-    if (response.status === 'success') {
-     Swal.fire(
-      'Sucesso!',
-      response.message,
-      'success'
-     )
-    } else {
-     Swal.fire(
-      'Ocorreu algum problema!',
-      response.message,
-      'warning'
-     )
-    }
-   }
-  })
+  $('select[name=breed]').selectpicker('refresh');
  }
-
  //load page event
  page.load = function () {
+  $('input[name=age]').mask('00');
+  $('input[name=weight]').mask('000');
   let id = app.getUrlParameter('id');
   if (app.getUrlParameter('id')) {
    $.get(page.requestURL + id, function (response) {
-    let title = 'Ocorreu algum erro!';
     if (response.status === 'success') {
-     $('input[name=name]').val(response.data.name);
+     page.loadFieldsValues(response.data);
     } else {
      Swal.fire(
       'Ocorreu algum problema!',
@@ -93,12 +58,11 @@
    }).fail(function () {
     Swal.fire(
      'Ocorreu algum erro!',
-     'Não foi possivel carregar obter esse registro.',
+     'Não foi possivel obter esse registro.',
      'error'
     )
    });
   }
  }
-
  page.load();
 </script>

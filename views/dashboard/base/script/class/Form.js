@@ -1,18 +1,27 @@
 class Form {
   constructor(url) {
     this.requestURL = url
+    $('select').selectpicker();
   }
-
   clear() {
     for (const key in this.fields) {
-      this.fields[key].input.val('');
+      if (this.fields[key].input.is('select')) {
+        this.fields[key].input.selectpicker('val', '');
+      } else {
+        this.fields[key].input.val('');
+      }
     }
   }
   validadeNull() {
     let error = false;
     for (const key in this.fields) {
       if (this.fields[key].required) {
-        if (this.fields[key].input.val() == '') {
+        let a = false;
+        switch (this.fields[key].input.val()) {
+          case null: a = true; break;
+          case '': a = true; break;
+        }
+        if (a) {
           this.fields[key].input.parent(".form-group").addClass("has-danger active");
           error = true;
         }
@@ -49,6 +58,8 @@ class Form {
     for (const key in this.fields) {
       if (this.fields[key].setValue) {
         this.fields[key].setValue(data[key]);
+      } else if (this.fields[key].input.is('select')) {
+        this.fields[key].input.selectpicker('val', data[key]);
       } else {
         this.fields[key].input.val(data[key]);
       }
@@ -108,5 +119,4 @@ class Form {
       }
     })
   }
-  clear() { }
 }

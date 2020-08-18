@@ -35,6 +35,7 @@ app.load = function () {
       switch (data.status) {
         case 404: window.location.href = '/app/#/404'; break;
         case 401: window.location.href = '/auth/#/entrar'; break;
+        case 403: window.location.href = '/app/#/403'; break;
       }
     });
   }
@@ -79,20 +80,6 @@ app.getUrlParameter = function (name) {
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
 
-app.statusInfo = function (key = '') {
-  switch (key.toLowerCase()) {
-    case 'success':
-      let time = new Date();
-      $('#data-status').html('<i class="fas fa-check wow animate__fadeIn text-success"></i> Atualizado as ' + app.pad(time.getHours(), 2) + ':' + app.pad(time.getMinutes(), 2));
-      break;
-    case 'error':
-      $('#data-status').html('<i class="fas fa-times wow animate__fadeIn text-danger"></i> Ocorreu um erro.');
-      break;
-    default:
-      $('#data-status').html('<i class="now-ui-icons loader_refresh spin wow animate__fadeIn text-info"></i> Atualizando...');
-      break;
-  }
-}
 //Ao iniciar
 $(document).ready(function () {
   window.onhashchange = function () {

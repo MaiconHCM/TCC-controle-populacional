@@ -1,106 +1,157 @@
 <div class="panel-header panel-header-sm">
 </div>
 <div class="content wow wow animate__fadeIn">
- <div class="row">
-  <div class="col-md-12">
-   <div class="card">
-    <div class="card-header">
-     <h5 class="title">Novo animal</h5>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Novo animal</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Nome do animal</label>
+                <input name="name" type="text" class="form-control" placeholder="Nome do animal">
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <label>Proprietários do animal</label>
+                <select name="owner" data-live-search="true"
+                  data-style="form-control btn btn-primary btn-round btn-block" multiple title="Selecione os proprietários">
+                  <% for(var i=0; i < persons.length; i++) { %>
+                  <option value="<%= persons[i]._id %>"><%= persons[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Qual é a espécie?</label>
+                <select onchange="page.loadBreeds()" name="specie"
+                  data-style="form-control btn btn-primary btn-round btn-block" title="Selecione a espécie"
+                  class="form-control">
+                  <% for(var i=0; i < species.length; i++) { %>
+                  <option value="<%= species[i]._id %>"><%= species[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Qual é a Raça?</label>
+                <select disabled name="breed" data-style="form-control btn btn-primary btn-round "
+                  class="form-control" title="Selecione a raça">
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Sexo do animal</label>
+                <select name="sex" class="form-control" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione o sexo">
+                  <option value="0">Fêmea</option>
+                  <option value="1">Macho</option>
+                  <option value="2">Não informado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Origem do animal</label>
+                <select name="origin" class="form-control" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione a origem">
+                  <% for(var i=0; i < origins.length; i++) { %>
+                  <option value="<%= origins[i]._id %>"><%= origins[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Código do chip</label>
+                <input name="chipNumber" type="number" class="form-control" placeholder="Código do chip do animal">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Idade do animal</label>
+                <input name="age" type="number" class="form-control" placeholder="Insira a idade do animal">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Animal castrado?</label>
+                <select name="castrated" class="form-control"
+                  data-style="form-control btn btn-primary btn-round btn-block" title="Selecione">
+                  <option value="0">Não</option>
+                  <option value="1">Sim</option>
+                  <option value="2">Não informado</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Pelagem</label>
+                <select name="coat" class="form-control" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione">
+                  <option value="0">Não Informada</option>
+                  <option value="1">Curta</option>
+                  <option value="2">Tosada</option>
+                  <option value="3">Longa</option>
+                  <option value="4">Sedosa</option>
+                  <option value="5">Dura</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Porte</label>
+                <select name="size" class="form-control" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione">
+                  <option value="0">Não Informada</option>
+                  <option value="1">PP</option>
+                  <option value="2">Pequeno</option>
+                  <option value="3">Médio</option>
+                  <option value="4">Grande</option>
+                  <option value="5">GG</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Cor</label>
+                <input name="color" type="string" class="form-control" placeholder="Insira a cor do animal">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Peso</label>
+                <input name="weight" type="number" class="form-control" placeholder="Insira a peso do animal">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Observação</label>
+                <textarea name="comments" rows="4" cols="80" class="form-control"
+                  placeholder="Observação, detalhes, informações adicionais, etc..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 pr-1 text-center">
+              <a href="/app/#/animais/" class="btn btn-lg btn-secondary"><i class="fas fa-arrow-left"></i>
+                Voltar</a>
+              <button class="btn btn-lg btn-primary" onclick="page.save()"><i class="fa fa-plus"></i>
+                Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-     <form>
-      <div class="row">
-       <div class="col-md-5 pr-1">
-        <div class="form-group">
-         <label>Raça</label>
-         <input type="text" class="form-control" placeholder="Raça do animal recolhido">
-        </div>
-       </div>
-       <div class="col-md-3 px-1">
-        <div class="form-group">
-         <label>Sexo</label>
-         <select class="form-control">
-          <option selected="">Selecione</option>
-          <option>Macho</option>
-          <option>Fêmea</option>
-         </select>
-        </div>
-       </div>
-       <div class="col-md-4 pl-1">
-        <div class="form-group">
-         <label for="exampleInputEmail1">Código do chip</label>
-         <input type="email" class="form-control" placeholder="Código">
-        </div>
-       </div>
-      </div>
-      <div class="row">
-       <div class="col-md-6 pr-1">
-        <div class="form-group">
-         <label>Qual situação do animal?</label>
-         <select class="form-control">
-          <option selected="">Selecione</option>
-          <option>Maus-tratos</option>
-          <option>Abandono</option>
-          <option>Apresenta risco</option>
-          <option>Nenhuma opção</option>
-         </select>
-        </div>
-       </div>
-       <div class="col-md-2 pl-1">
-        <div class="form-check">
-         <label class="form-check-label">
-          <input class="form-check-input" type="checkbox">
-          <span class="form-check-sign"></span>
-          Animal Castrado
-         </label>
-        </div>
-       </div>
-       <div class="col-md-2 pl-1">
-        <div class="form-check">
-         <label class="form-check-label">
-          <input class="form-check-input" type="checkbox">
-          <span class="form-check-sign"></span>
-          Possui zoonense
-         </label>
-        </div>
-       </div>
-       <div class="col-md-2 pl-1">
-        <div class="form-check">
-         <label class="form-check-label">
-          <input class="form-check-input" type="checkbox">
-          <span class="form-check-sign"></span>
-          Situação de risco
-         </label>
-        </div>
-       </div>
-      </div>
-      <div class="row">
-       <div class="col-md-4">
-        <div class="form-group">
-         <label>Bairro</label>
-         <input type="text" class="form-control" placeholder="Bairro onde esse animal foi recolhido" value="">
-        </div>
-       </div>
-       <div class="col-md-8">
-        <div class="form-group">
-         <label>Endereço de recolhimento</label>
-         <input type="text" class="form-control" placeholder="Endereço onde esse animal foi recolhido" value="">
-        </div>
-       </div>
-      </div>
-      <div class="row">
-       <div class="col-md-12">
-        <div class="form-group">
-         <label>Observação</label>
-         <textarea rows="4" cols="80" class="form-control"
-          placeholder="Observação, detalhes, informações adicionais, etc..."></textarea>
-        </div>
-       </div>
-      </div>
-     </form>
-    </div>
-   </div>
   </div>
- </div>
 </div>
 <%- include("script/form") %>

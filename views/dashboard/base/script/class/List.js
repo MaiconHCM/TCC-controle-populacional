@@ -5,21 +5,22 @@ class List {
 
   //Função do filtro.
   filter() {
-    app.statusInfo();
+    this.statusInfo();
     let params = {};
     let name = $('input[name=search]').val();
     if (name) {
       params.name = name;
     }
-    let ref=this;
+    let ref = this;
     $.post(this.requestURL + "filter", params, function (response) {
-
-      if (response.data) {
+      if (response.status==='success') {
         ref.list(response.data);
-        app.statusInfo('success');
+        ref.statusInfo('success');
+      }else{
+        ref.statusInfo('error');
       }
     }).fail(function (response) {
-      app.statusInfo('error');
+      ref.statusInfo('error');
     });
   }
 
@@ -46,10 +47,24 @@ class List {
     }
     $('#data-view').html(a);
   }
+  statusInfo(key = '') {
+    switch (key.toLowerCase()) {
+      case 'success':
+        let time = new Date();
+        $('#data-status').html('<i class="fas fa-check wow animate__fadeIn text-success"></i> Atualizado as ' + app.pad(time.getHours(), 2) + ':' + app.pad(time.getMinutes(), 2));
+        break;
+      case 'error':
+        $('#data-status').html('<i class="fas fa-times wow animate__fadeIn text-danger"></i> Ocorreu um erro.');
+        break;
+      default:
+        $('#data-status').html('<i class="now-ui-icons loader_refresh spin wow animate__fadeIn text-info"></i> Atualizando...');
+        break;
+    }
+  }
 
   //função de apagar.
   delete(id) {
-    let ref=this;
+    let ref = this;
     Swal.fire({
       title: 'Você tem certeza?',
       text: "Você não poderá reverter isso",

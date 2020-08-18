@@ -12,8 +12,7 @@
             <div class="col-md-6 pr-1">
               <div class="form-group">
                 <label>Qual é a espécie?</label>
-                <select name="specie" class="form-control">
-                  <option value="">Selecione...</option>
+                <select name="specie" class="form-control" data-style="form-control btn btn-primary btn-round btn-block" title="Selecione a espécie">
                   <% for(var i=0; i < species.length; i++) { %>
                   <option value="<%= species[i]._id %>"><%= species[i].name %></option>
                   <% } %>
