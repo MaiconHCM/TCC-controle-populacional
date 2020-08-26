@@ -1,0 +1,59 @@
+<script>
+ page = new Form("/api/users/register");
+ page.fields = {
+  name: { input: $('input[name=name]'), required: true },
+  password: { input: $('input[name=password]'), required: true },
+  email: { input: $('input[name=email]'), required: true },
+  role: { input: $('select[name=role]'), required: true },
+ };
+ //load page event
+ page.load = function () {
+  let id = app.getUrlParameter('id');
+  if (app.getUrlParameter('id')) {
+   $.get('/api/users/' + id, function (response) {
+    if (response.status === 'success') {
+     page.fields['name'].input.val(response.data['name']);
+     page.fields['email'].input.val(response.data['email']);
+     page.fields['role'].input.selectpicker('val', response.data['role']);
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }).fail(function () {
+    Swal.fire(
+     'Ocorreu algum erro!',
+     'Não foi possivel obter esse registro.',
+     'error'
+    )
+   });
+  }
+ }
+ page.update = function (id, send) {
+  $.ajax({
+   url: '/api/users/' + id,
+   type: 'PUT',
+   data: send,
+   processData: true,
+   success: function (response) {
+    window.location.href = window.location.href;
+    if (response.status === 'success') {
+     Swal.fire(
+      'Sucesso!',
+      response.message,
+      'success'
+     )
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }
+  })
+ }
+ page.load();
+</script>

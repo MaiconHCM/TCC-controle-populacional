@@ -13,10 +13,10 @@ class List {
     }
     let ref = this;
     $.post(this.requestURL + "filter", params, function (response) {
-      if (response.status==='success') {
+      if (response.status === 'success') {
         ref.list(response.data);
         ref.statusInfo('success');
-      }else{
+      } else {
         ref.statusInfo('error');
       }
     }).fail(function (response) {
@@ -77,24 +77,28 @@ class List {
         $.ajax({
           url: ref.requestURL + id,
           type: 'DELETE',
-          success: function (response) {
-            window.location.href = window.location.href;
-            if (response.status === 'success') {
-              page.filter();
-              Swal.fire(
-                'Apagado!',
-                response.message,
-                'success'
-              )
-            } else {
-              Swal.fire(
-                'Ocorreu algum problema!',
-                response.message,
-                'warning'
-              )
-            }
+        }).done(function (response) {
+          if (response.status === 'success') {
+            page.filter();
+            Swal.fire(
+              'Apagado!',
+              response.message,
+              'success'
+            )
+          } else {
+            Swal.fire(
+              'Ocorreu um erro!',
+              response.message,
+              'error'
+            )
           }
-        })
+        }).fail(function (response) {
+          Swal.fire(
+            'Ocorreu um erro!',
+            'Entre em contato com um administrador',
+            'error'
+          )
+        });
       }
     })
   }

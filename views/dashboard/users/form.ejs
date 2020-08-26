@@ -1,0 +1,56 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow wow animate__fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Espécie</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Nome do usuário</label>
+                <input name="name" type="text" class="form-control" placeholder="Insira o nome do usuário">
+              </div>
+            </div>
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Email</label>
+                <input name="email" type="email" class="form-control" placeholder="Insira o email do usuário">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Tipo de usuário</label>
+                <select name="role" data-style="form-control btn btn-primary btn-round " class="form-control"
+                  title="Selecione o tipo de usuário">
+                  <option value="1">Clínica</option>
+                  <option value="2">SMMA Interno</option>
+                  <option value="3">Cidadão</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Senha provisória</label>
+                <input name="password" type="text" class="form-control" placeholder="Insira uma senha">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 pr-1 text-center">
+              <a href="/app/#/usuarios/" class="btn btn-lg btn-secondary"><i class="fas fa-arrow-left"></i>
+                Voltar</a>
+              <button class="btn btn-lg btn-primary" onclick="page.save()"><i class="fa fa-plus"></i>
+                Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("script/form") %>

@@ -1,0 +1,64 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow animate__fadeInUp">
+ <div class="row">
+  <div class="col-md-12">
+   <div class="card  card-tasks">
+    <div class="card-header">
+     <a href="/app/#/usuarios/form" type="submit" class="btn btn-primary pull-right"><i class="fa fa-plus"></i>
+      Novo usuário</a>
+    </div>
+    <div class="card-body ">
+     <ul id="user-role" class="nav nav-pills nav-pills-primary nav-pills-icons justify-content-center" role="tablist">
+      <li class="nav-item">
+       <a onclick="page.changeTypeUser(1)" class="nav-link active" data-toggle="tab" href="#void" role="tablist">
+        <i class="now-ui-icons objects_umbrella-13"></i>
+        Clínica
+       </a>
+      </li>
+      <li class="nav-item">
+       <a onclick="page.changeTypeUser(2)" class="nav-link" data-toggle="tab" href="#void" role="tablist">
+        <i class="now-ui-icons shopping_shop"></i>
+        SMMA interno
+       </a>
+      </li>
+      <li class="nav-item">
+       <a onclick="page.changeTypeUser(3)" class="nav-link" data-toggle="tab" href="#void" role="tablist">
+        <i class="now-ui-icons ui-2_settings-90"></i>
+        Cidadãos
+       </a>
+      </li>
+     </ul>
+     <div class="input-group no-border">
+      <input name="search" onkeyup="page.filter()" type="text" value="" class="form-control" placeholder="Pesquisar...">
+      <div class="input-group-append">
+       <div class="input-group-text">
+        <i class="now-ui-icons ui-1_zoom-bold"></i>
+       </div>
+      </div>
+     </div>
+     <div class="tab-pane active" id="link7">
+      <div class="table-full-width table-responsive">
+       <table class="table table-hover">
+        <thead>
+         <tr>
+          <th>Nome</th>
+          <th colspan="2"></th>
+         </tr>
+        </thead>
+        <tbody id="data-view">
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+    <div class="card-footer ">
+     <hr>
+     <div id="data-status" class="stats">
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+<%- include("script/index") %>

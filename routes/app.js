@@ -105,6 +105,18 @@ router.get('/pessoas/form', validateUser, function (req, res, next) {
  });
 });
 
+//Pessoas
+router.get('/usuarios', validateUser, function (req, res, next) {
+ res.render('dashboard/users/index', {}, function (err, html) {
+  res.json({ title: 'Usuários', html });
+ });
+});
+router.get('/usuarios/form', validateUser, function (req, res, next) {
+ res.render('dashboard/users/form', {}, function (err, html) {
+  res.json({ title: 'Formulário do usuário', html });
+ });
+});
+
 //Páginas padrões
 router.get('/404', validateUser, function (req, res, next) {
  res.render('dashboard/404', {}, function (err, html) {
@@ -121,19 +133,6 @@ router.get('/403', function (req, res, next) {
 ///Funções
 //verifica token
 function validateUser(req, res, next) {
- jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
-  if (err) {
-   res.status(401).json({ message: err.message, data: null });
-  } else {
-   if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
-    res.status(403).json({ message: "Permissão insuficiente para seu usuário", data: null });
-   } else {
-    next();
-   }
-  }
- });
-}
-function generateMenuUser(req, res, next) {
  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
   if (err) {
    res.status(401).json({ message: err.message, data: null });

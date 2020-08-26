@@ -1,0 +1,54 @@
+<script>
+  page = new List("/api/users/");
+  page.list = function (data) {
+    let a = '';
+    for (const prop in data) {
+      const item = data[prop];
+      a +=
+        '<tr>' +
+        '<td>' + item.name + '</td>' +
+        '<td colspan="2" class="text-right">' +
+        '<a href="http://localhost:3000/app/#/usuarios/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
+        '<i class="fas fa-pencil-alt"></i> Editar' +
+        '</a>' +
+        '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
+        '<i class="fas fa-trash"></i> Apagar' +
+        '</button>' +
+        '</td>' +
+        '</tr>';
+    }
+    if (a === '') {
+      a = "<tr><td>Não possuí nenhum registro.</td></tr>"
+    }
+    $('#data-view').html(a);
+  }
+  page.role=1
+  page.changeTypeUser=function(role){
+    if(this.role!=role){
+      this.role=role;
+      page.filter();
+    }
+  }
+  page.filter=function(){
+    this.statusInfo();
+    let params = {};
+    let name = $('input[name=search]').val();
+    let role = this.role;
+    if (name) {
+      params.name = name;
+    }
+    params.role=this.role;
+    let ref = this;
+    $.post(this.requestURL + "filter", params, function (response) {
+      if (response.status === 'success') {
+        ref.list(response.data);
+        ref.statusInfo('success');
+      } else {
+        ref.statusInfo('error');
+      }
+    }).fail(function (response) {
+      ref.statusInfo('error');
+    });
+  }
+  page.filter();
+</script>

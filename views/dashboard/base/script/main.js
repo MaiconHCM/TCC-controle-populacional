@@ -62,9 +62,6 @@ app.activeMenu = function () {
   hash = hash.split('/');
   $('#sidebar-wrapper > ul > li.active').removeClass('active');
   $('#menu-' + hash[0]).addClass('active');
-  if (hash[1]) {
-
-  }
 }
 app.setUserInfo = function (data) {
   $('#navbar_userName').text(data.user);
@@ -79,11 +76,54 @@ app.getUrlParameter = function (name) {
   var results = regex.exec(app.getHashUrl());
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
+app.generateMenu = function () {
+  let role = window.localStorage.getItem('role');
+  const menuItemCreate = function (title, url, icon) {
+    return '<li id="menu-' + url + '">\
+        <a href="/app/#/'+ url + '">\
+            <i class="fa fa-'+ icon + '"></i>\
+            <p>'+ title + '</p>\
+        </a>\
+    </li>';
+  }
+  const item = {
+    inicio: menuItemCreate('início', 'inicio', 'home'),
+    animais: menuItemCreate('Animais', 'animais', 'list-ul'),
+    procedimentos: menuItemCreate('Procedimentos', 'procedimentos', 'list-ul'),
+    especies: menuItemCreate('Espécies', 'especies', 'list-ul'),
+    origens: menuItemCreate('Origens', 'origens', 'list-ul'),
+    pessoas: menuItemCreate('Pessoas', 'pessoas', 'list-ul'),
+    racas: menuItemCreate('Raças', 'racas', 'list-ul'),
+    users: menuItemCreate('Usuários', 'usuarios', 'list-ul')
+  }
+  let append = '';
+  switch (parseInt(role)) {
+    case 0:
+      append = item.inicio + 
+      item.animais + 
+      item.especies+
+      item.racas+
+      item.origens+
+      item.pessoas+
+      item.procedimentos+
+      item.users
+      break;
+    case 1:
+      append = '';
+      break;
+    case 2:
+      append = item.inicio + item.animais + item.procedimentos;
+      break;
+  }
+  $('#sidebar-wrapper > ul').html(append);
+
+}
 
 //Ao iniciar
 $(document).ready(function () {
   window.onhashchange = function () {
     app.load();
   }
+  app.generateMenu()
   app.load();
 });

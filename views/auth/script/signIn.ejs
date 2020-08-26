@@ -4,12 +4,18 @@
   let email = $('input[name=email]').val();
   let password = $('input[name=password]').val();
 
-  $.post("/api/users/authenticate", { email, password }, function (data) {
-   if (data.status === 'success') {
-    window.localStorage.setItem('x-access-token', data.data.token);
+  $.post("/api/users/authenticate", { email, password }, function (response) {
+   if (response.status === 'success') {
+    window.localStorage.setItem('x-access-token', response.data.token);
+    window.localStorage.setItem('name', response.data.name);
+    window.localStorage.setItem('role', response.data.role);
     window.location.href = '/app/#/inicio';
    } else {
-    alert('error');
+    Swal.fire(
+     'Atenção!',
+     response.message,
+     'warning'
+    )
    }
   });
  }

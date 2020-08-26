@@ -84,7 +84,7 @@ function validateUser(req, res, next) {
     } else {
       //Verify role of user.
       if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
-        res.status(401).json({ message: "Permissão insuficiente!", data: null });
+        res.status(403).json({ message: "Permissão insuficiente!", data: null });
       } else {
         // add user id to request
         req.body.userId = decoded.id;
