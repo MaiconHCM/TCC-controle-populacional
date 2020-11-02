@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 
 router.post('/authenticate', userController.authenticate);
 router.post('/register', validateUser, userController.create);
+router.post('/create-clinic-user', validateUser, userController.createClinicUser);
 router.post('/filter', validateUser, userController.filter);
 router.put('/:id', validateUser, userController.updateById);
 router.get('/:id', validateUser, userController.getById);

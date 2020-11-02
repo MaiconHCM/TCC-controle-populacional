@@ -94,29 +94,30 @@ app.generateMenu = function () {
     origens: menuItemCreate('Origens', 'origens', 'list-ul'),
     pessoas: menuItemCreate('Pessoas', 'pessoas', 'list-ul'),
     racas: menuItemCreate('Raças', 'racas', 'list-ul'),
-    users: menuItemCreate('Usuários', 'usuarios', 'list-ul')
+    users: menuItemCreate('Usuários', 'usuarios', 'list-ul'),
+    clinicas: menuItemCreate('Clínicas', 'clinicas', 'list-ul'),
+    procedimentosrealizados: menuItemCreate('Procedimentos Realizados', 'procedimentos-realizados', 'list-ul')
   }
   let append = '';
   switch (parseInt(role)) {
     case 0:
-      append = item.inicio + 
-      item.animais + 
-      item.especies+
-      item.racas+
-      item.origens+
-      item.pessoas+
-      item.procedimentos+
-      item.users
+      for (var prop in item) {
+        append += item[prop];
+      }
       break;
     case 1:
-      append = '';
+      append = item.procedimentosrealizados;
       break;
     case 2:
-      append = item.inicio + item.animais + item.procedimentos;
+      append = item.inicio + item.animais + item.procedimentos + item.procedimentosrealizados;
       break;
   }
   $('#sidebar-wrapper > ul').html(append);
 
+}
+app.standardizeDate = function (date) {
+  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+  return date;
 }
 
 //Ao iniciar

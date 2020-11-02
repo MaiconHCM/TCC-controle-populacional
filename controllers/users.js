@@ -2,6 +2,7 @@ const userModel = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 module.exports = {
+
   create: function (req, res, next) {
     let user = {
       name: req.body.name,
@@ -13,7 +14,7 @@ module.exports = {
       //Coloca de acordo a role selecionada
       user.role = req.body.role
     } else {
-      //Se não, coloca com usuário cidadão
+      //Se não, coloca como role usuário
       user.role = 3
     }
 
@@ -21,12 +22,34 @@ module.exports = {
       if (err)
         next(err);
       else
-        res.json({ status: "success", message: "User added successfully!!!", data: null });
+        res.json({ status: "success", message: "Usuário adicionado com sucesso!", data: null });
 
     });
   },
+
+  //CreateClinic
+  createClinicUser: function (req, res, next) {
+    let user = {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password
+    }
+    //Coloca de acordo a role clinica
+    user.role = 1
+    user.clinic = req.body.clinic
+
+    userModel.create(user, function (err, result) {
+      if (err)
+        next(err);
+      else
+        res.json({ status: "success", message: "Usuário da clínica adicionado com sucesso!", data: null });
+
+    });
+  },
+
   authenticate: function (req, res, next) {
-    userModel.findOne({ email: req.body.email }, function (err, userInfo) {
+    let name = { $regex: new RegExp("^" + req.body.name, "i") }
+    userModel.findOne({ name }, function (err, userInfo) {
       if (err) {
         next(err);
       } else if (userInfo) {
@@ -34,13 +57,14 @@ module.exports = {
           const token = jwt.sign({ id: userInfo._id, name: userInfo.name, email: userInfo.email, role: userInfo.role }, req.app.get('secretKey'), { expiresIn: '1h' });
           res.json({ status: "success", message: "user found!", data: { token, name: userInfo.name, role: userInfo.role } });
         } else {
-          res.json({ status: "error", message: "Email ou senha incorreto!", data: null });
+          res.json({ status: "error", message: "Nome de usuário ou senha incorreto!", data: null });
         }
       } else {
-        res.json({ status: "error", message: "Email ou senha incorreto!", data: null });
+        res.json({ status: "error", message: "Nome de usuário ou senha incorreto!", data: null });
       }
     });
   },
+
   //filter para busca
   filter: function (req, res, next) {
     if (req.body.userRole !== 0) {
@@ -53,6 +77,9 @@ module.exports = {
     if (req.body['role']) {
       params['role'] = req.body['role'];
     }
+    if (req.body['clinic']) {
+      params['clinic'] = req.body['clinic'];
+    }
 
     console.log(params);
     let data = [];
@@ -62,7 +89,7 @@ module.exports = {
         res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
       } else {
         for (let lists of listings) {
-          
+
           delete lists.password;
           data.push(lists);
         }
@@ -70,6 +97,7 @@ module.exports = {
       }
     });
   },
+
   getById: function (req, res, next) {
     if (req.body.userRole !== 0) {
       return res.status(403).json({ message: "Permissão insuficiente!", data: null });

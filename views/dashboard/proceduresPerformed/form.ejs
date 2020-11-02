@@ -1,0 +1,94 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow wow animate__fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Formulário de procedimento</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Procedimento</label>
+                <select name="procedure" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione o procedimento" class="form-control">
+                  <% for(var i=0; i < procedures.length; i++) { %>
+                  <option value="<%= procedures[i]._id %>"><%= procedures[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Proprietário do animal</label>
+                <select onchange="page.loadAnimals()" name="owner"
+                  data-style="form-control btn btn-primary btn-round btn-block" title="Selecione o proprietário"
+                  class="form-control">
+                  <option value="">Sem proprietário</option>
+                  <% for(var i=0; i < persons.length; i++) { %>
+                  <option value="<%= persons[i]._id %>"><%= persons[i].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Animal</label>
+                <select disabled name="animal" data-style="form-control btn btn-primary btn-round btn-block"
+                  title="Selecione o animal" class="form-control">
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Data de Entrada</label>
+                <input name="startAt" type="text" class="form-control datepicker">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Data de Saída</label>
+                <input name="endAt" type="text" class="form-control datepicker">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Médico Responsável:</label>
+                <input name="medicResponsible" type="text" class="form-control" placeholder="Insira o nome do médico"
+                  value="">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>CRMV:</label>
+                <input name="crmv" type="text" class="form-control" placeholder="Insira o CRVM da empresa" value="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Observação</label>
+                <textarea name="comments" rows="4" cols="80" class="form-control"
+                  placeholder="Observação, detalhes, informações adicionais, etc..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 pr-1 text-center">
+              <a href="/app/#/procedimentos-realizados/" class="btn btn-lg btn-secondary"><i
+                  class="fas fa-arrow-left"></i>
+                Voltar</a>
+              <button class="btn btn-lg btn-primary" onclick="page.save()"><i class="fa fa-plus"></i>
+                Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("script/form") %>

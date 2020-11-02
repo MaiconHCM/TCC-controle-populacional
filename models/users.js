@@ -23,7 +23,13 @@ const schema = new mongoose.Schema({
  role: {
   type: Number,
   required: true
- }
+ },
+
+ //Caso o usuário for uma clínica, esse campo será preenchido
+ clinic: mongoose.Schema.Types.ObjectId,
+
+ //Caso o usuário for uma pessoa física, esse campo será preenchido
+ person: mongoose.Schema.Types.ObjectId,
 });
 
 // hash user password before saving into database

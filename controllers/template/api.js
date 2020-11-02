@@ -1,9 +1,6 @@
-const { compareSync } = require("bcrypt");
-
 module.exports = function (model) {
   return {
     getById: function (req, res, next) {
-      console.log(req.body);
       model.findById(req.params.id, function (err, data) {
         if (err) {
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
@@ -11,6 +8,18 @@ module.exports = function (model) {
           res.json({ status: "success", message: "Registro encontrado.", data });
         }
       });
+    },
+
+    getByIdArray:async function (id) {
+      data=null
+      await model.findById(id, function (err, rtn) {
+        if (err) {
+          data=null
+        } else {
+          data=rtn
+        }
+      });
+      return data
     },
 
     getAll: function (req, res, next) {
@@ -48,24 +57,27 @@ module.exports = function (model) {
       let params = Object.assign(req.body, author);
 
       //remove array
-      const a=params;
+      const a = params;
       for (const key in a) {
-        if(key.indexOf('[]') !== -1){
-          params[key.replace('[]','')]=a[key];
+        if (key.indexOf('[]') !== -1) {
+          let value = a[key];
+          if (a[key] === '')
+            value = []
+          params[key.replace('[]', '')] = value;
           delete params[key];
         }
       }
 
       //encontra modelo e atualiza
-      console.log(params);
       model.findByIdAndUpdate(req.params.id, params, function (err, listingInfo) {
-        if (err)
+        if (err) {
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
-        else {
+        } else {
           res.json({ status: "success", message: "Registro atualizado com sucesso.", data: null });
         }
       });
     },
+
     deleteById: function (req, res, next) {
       //apaga pelo id
       model.findByIdAndRemove(req.params.id, function (err, listingInfo) {
@@ -76,6 +88,7 @@ module.exports = function (model) {
         }
       });
     },
+    
 
     create: function (req, res, next) {
       //define autores da modificação
@@ -83,27 +96,27 @@ module.exports = function (model) {
 
       //adiciona cria variavel params e define autores e informações do body
       let params = Object.assign(req.body, author);
-      
+
       //remove array
-      let a=params;
+      let a = params;
       for (const key in a) {
-        if(key.indexOf('[]') !== -1){
-          params[key.replace('[]','')]=a[key];
+        if (key.indexOf('[]') !== -1) {
+          params[key.replace('[]', '')] = a[key];
           delete params[key];
         }
       }
-      
+
       //Cria modelo
-      console.log(params);
       model.create(params, function (err, result) {
-        if (err)
+        if (err) {
+          console.log(err)
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
-        else
+        } else
           res.json({ status: "success", message: "Registro adicionado com sucesso.", data: null });
       });
     },
 
-    //filter para busca
+    //filter para busca por parametros
     filter: function (req, res, next) {
       let params = {};
       //gera os parametros.
@@ -112,7 +125,6 @@ module.exports = function (model) {
       }
       //remove user id dos parametros.
       delete params['userId'];
-      console.log(params);
       let data = [];
       model.find(params, function (err, listings) {
         if (err) {

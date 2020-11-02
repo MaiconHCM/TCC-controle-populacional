@@ -1,0 +1,136 @@
+<script>
+  page = new List("/api/clinics/");
+  page.list = function (data) {
+    let a = '';
+    let ref = this;
+    for (const prop in data) {
+      const item = data[prop];
+      ref.entidy[item._id] = item
+      a +=
+        '<tr>' +
+        '<td>' + item.name + '</td>' +
+        '<td colspan="2" class="text-right">' +
+        '<button onclick="page.userButton(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-primary btn-link btn-sm">' +
+        '<i class="fas fa-user"></i> Usuários' +
+        '</button>' +
+        '<a href="http://localhost:3000/app/#/clinicas/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
+        '<i class="fas fa-pencil-alt"></i> Editar' +
+        '</a>' +
+        '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
+        '<i class="fas fa-trash"></i> Apagar' +
+        '</button>' +
+        '</td>' +
+        '</tr>';
+    }
+    if (a === '') {
+      a = "<tr><td>Não possuí nenhum registro.</td></tr>"
+    }
+    $('#data-view').html(a);
+  }
+  page.userButton = function (clinicId) {
+
+    let params = {
+      role: 1,
+      clinic: clinicId
+    }
+    let html = '';
+
+    //dificil de ler
+    $.post( "/api/users/filter", params, function (response) {
+      page.clinicUsers = [];
+      if (response.status === 'success') {
+        for (const key in response.data) {
+          user = response.data[key]
+          page.clinicUsers[key] = user
+          html +=
+            '<tr>' +
+            '<td>' + user.name + '</td>' +
+            '<td>' +
+            '<button onclick="page.changePasswordUser(\'' + key + '\')" type="button" rel="tooltip" class="btn btn-warning btn-link btn-sm">' +
+            '<i class="fas fa-key"></i>Nova senha' +
+            '</button>' +
+            '<button onclick="page.deleteUser(\'' + key + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
+            '<i class="fas fa-trash"></i>' +
+            '</button>' +
+            '</td>' +
+            '</tr>'
+        }
+        if (html === '')
+          html = '<tr><td colspan="3">Nenhum usuário nessa clínica.</td></tr>'
+        page.userModal(html, clinicId);
+      }
+
+    }).fail(function (response) {
+      alert('error')
+    });
+  }
+  page.userModal = function (object, clinicId) {
+    let html =
+      '<table width="100%">' +
+      '<th>Nome</th>' +
+      '<th>Ações</th>' +
+      '</tr>' +
+      object +
+      '</table>';
+
+    Swal.fire({
+      title: 'Usuários da clínica',
+      html,
+      confirmButtonText: 'Adicionar novo',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        page.newUserModal(clinicId)
+      }
+    })
+  }
+  page.newUserModal = async function (clinicId) {
+
+    let clinic = page.entidy[clinicId]
+    const { value: formValues } = await Swal.fire({
+      title: 'Novo usuário',
+      html:
+        '<input Placeholder="Nome de usuário" id="swal-input-name" class="swal2-input">' +
+        '<input Placeholder="Email" id="swal-input-email" value="' + clinic.email + '" class="swal2-input">' +
+        '<input Placeholder="Senha" id="swal-input-password" value="' + Math.random().toString(36).slice(-8) + '" class="swal2-input">',
+      focusConfirm: false,
+      preConfirm: () => {
+        return {
+          name: document.getElementById('swal-input-name').value,
+          email: document.getElementById('swal-input-email').value,
+          password: document.getElementById('swal-input-password').value
+        }
+      }
+    })
+    let isNull = false;
+    switch ('') {
+      case formValues.name: isNull = true; break;
+      case formValues.email: isNull = true; break;
+      case formValues.password: isNull = true; break;
+    }
+    
+
+    if (!isNull) {
+      formValues.clinic=clinicId;
+      $.post("/api/users/create-clinic-user", formValues, function (response) {
+        
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Insira todos campos!',
+        text: 'É necessário preencher todos os campos.',
+        confirmButtonText: 'Tentar de novo',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          page.newUserModal(clinicId)
+        }
+      })
+    }
+
+  }
+  page.filter();
+</script>

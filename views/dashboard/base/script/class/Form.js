@@ -32,8 +32,19 @@ class Form {
   getFieldsValues() {
     let list = {};
     for (const key in this.fields) {
-      list[key] = this.fields[key].input.val();
+      if (this.fields[key].getValue) {
+        list[key] = this.fields[key].getValue();
+      } else {
+        list[key] = $(this.fields[key].input).unmask().val();
+      }
+
+      if (typeof list[key] === "object") {
+        if (list[key].length === 0) {
+          list[key] = ['']
+        }
+      }
     }
+    this.mask();
     return list;
   }
   //Save event
@@ -54,14 +65,15 @@ class Form {
       this.new(send);
     }
   }
-  loadFieldsValues(data) {
+  async loadFieldsValues(data) {
+    page.mask()
     for (const key in this.fields) {
       if (this.fields[key].setValue) {
-        this.fields[key].setValue(data[key]);
+        await this.fields[key].setValue(data[key]);
       } else if (this.fields[key].input.is('select')) {
-        this.fields[key].input.selectpicker('val', data[key]);
+        await this.fields[key].input.selectpicker('val', data[key]);
       } else {
-        this.fields[key].input.val(data[key]);
+        await this.fields[key].input.val(data[key]);
       }
     }
   }
@@ -70,7 +82,6 @@ class Form {
   new(send) {
     let ref = this;
     $.post(this.requestURL, send, function (response) {
-      let title = 'Ocorreu algum erro!';
       if (response.status === 'success') {
         Swal.fire(
           'Sucesso!',
@@ -119,4 +130,6 @@ class Form {
       }
     })
   }
+
+  mask() { }
 }

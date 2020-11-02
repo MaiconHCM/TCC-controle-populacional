@@ -1,14 +1,7 @@
 <script>
- page = new Form("/api/persons/");
+ page = new Form("/api/clinics/");
  page.fields = {
   name: { input: $('input[name=name]'), required: true },
-  dateBirth: {
-   input: $('input[name=dateBirth]'),
-   setValue: function (value) {
-    let date = app.standardizeDate(new Date(value));
-    $(this.input).val(date.getFullYear() + '-' + app.pad(date.getMonth() + 1, 2) + '-' + app.pad(date.getDate(), 2));
-   }
-  },
   sex: { input: $('select[name=sex]') },
   email: { input: $('input[name=email]'), required: true },
   telephone: { input: $('input[name=telephone]') },
@@ -20,8 +13,9 @@
   complement: { input: $('input[name=complement]') },
   city: { input: $('input[name=city]') },
   state: { input: $('input[name=state]') },
-  cpf: { input: $('input[name=cpf]') },
-  rg: { input: $('input[name=rg]') }
+  cnpj: { input: $('input[name=cnpj]') },
+  crmv: { input: $('input[name=crmv]') },
+  medicResponsible: { input: $('input[name=medicResponsible]') }
  };
  //load page event
  page.load = function () {
@@ -50,8 +44,8 @@
   }
  }
  page.mask = function () {
-  $('input[name=cpf]').mask('000.000.000-00', { reverse: true });
-  $('input[name=rg]').mask('00.000.000-0', { reverse: true });
+  $('input[name=crmv]').mask('00000');
+  $('input[name=cnpj]').mask('00.000.000/0000-00', {reverse: true});
   $('input[name=cep]').mask('00000-000');
   $('input[name=telephone]').mask('(00) 0000-0000');
   $('input[name=cellphone]').mask('(00) 0000-00000');

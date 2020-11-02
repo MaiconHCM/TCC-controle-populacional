@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const proceduresController = require('../controllers/procedures');
 const speciesController = require('../controllers/species');
 const originsController = require('../controllers/origins');
 const breedsController = require('../controllers/breeds');
 const personsController = require('../controllers/persons');
+const animalsController = require('../controllers/animals');
 const roles = require('../roles');
 var jwt = require('jsonwebtoken');
 
@@ -105,6 +107,50 @@ router.get('/pessoas/form', validateUser, function (req, res, next) {
  });
 });
 
+//procedimentos
+router.get('/procedimentos', validateUser, function (req, res, next) {
+ res.render('dashboard/procedures/index', {}, function (err, html) {
+  res.json({ title: 'Procedimentos', html });
+ });
+});
+router.get('/procedimentos/form', validateUser, function (req, res, next) {
+ res.render('dashboard/procedures/form', {}, function (err, html) {
+  res.json({ title: 'Formulário Procedimentos', html });
+ });
+});
+
+//Clínicas
+router.get('/clinicas', validateUser, function (req, res, next) {
+ res.render('dashboard/clinics/index', {}, function (err, html) {
+  res.json({ title: 'Clínicas', html });
+ });
+});
+router.get('/clinicas/form', validateUser, function (req, res, next) {
+ res.render('dashboard/clinics/form', {}, function (err, html) {
+  res.json({ title: 'Formulário Clínicas', html });
+ });
+});
+
+//Procedimentos Realizados
+router.get('/procedimentos-realizados', validateUser, async function (req, res, next) {
+ let animals = await animalsController.getAllArray();
+ animals = removeInfo(animals,['_id','name'])
+ res.render('dashboard/proceduresPerformed/index', {}, function (err, html) {
+  res.json({ title: 'Procedimentos realizados', variables: { animals }, html });
+ });
+});
+
+router.get('/procedimentos-realizados/form', validateUser, async function (req, res, next) {
+ try {
+  let procedures = await proceduresController.getAllArray()
+  let persons = await personsController.getAllArray()
+
+  res.render('dashboard/proceduresPerformed/form', { procedures, persons }, function (err, html) {
+   res.json({ title: 'Formulário Procedimentos realizados', html });
+  });
+ } catch (e) { console.log(e) }
+});
+
 //Pessoas
 router.get('/usuarios', validateUser, function (req, res, next) {
  res.render('dashboard/users/index', {}, function (err, html) {
@@ -145,4 +191,27 @@ function validateUser(req, res, next) {
   }
  });
 }
+
+function removeInfo(array, keys) {
+ let rtn = [];
+ for (let index = 0; index < array.length; index++) {
+  const object = array[index];
+  let newObject = {};
+
+  for (const key in object) {
+
+   for (let index1 = 0; index1 < keys.length; index1++) {
+    if (key === keys[index1]) {
+     newObject[key]=object[key];
+     break
+    }
+   }
+  }
+
+  rtn.push(newObject)
+ }
+
+ return rtn
+};
+
 module.exports = router;

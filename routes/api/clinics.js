@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../../controllers/animals');
+const controller = require('../../controllers/clinics');
 const template = require('./template/api');
 
 template(router, controller);
-
-router.post('/filter-by-owner', controller.filterByOwner);
 
 module.exports = router;

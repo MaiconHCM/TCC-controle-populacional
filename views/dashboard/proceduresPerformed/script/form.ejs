@@ -1,0 +1,125 @@
+<script>
+ page = new Form("/api/procedures-performed/");
+
+ //campos
+ page.fields = {
+  procedure: { input: $('select[name=procedure]') },
+  owner: {
+   input: $('select[name=owner]'),
+   setValue:async function (value) {
+    this.input.selectpicker('val', value);
+    await page.loadAnimals()
+   }
+  },
+
+  animal: { input: $('select[name=animal]') },
+  startAt: {
+   input: $('input[name=startAt]'),
+   setValue: function (value) {
+    let date = app.standardizeDate(new Date(value))
+    $(this.input).data("DateTimePicker").date(date)
+   },
+   getValue: function () {
+    let value = this.input.val()
+    let splits = value.split('/')
+    return new Date(splits[2], splits[1], splits[0])
+   }
+  },
+
+  endAt: {
+   input: $('input[name=endAt]'),
+   setValue: function (value) {
+    let date = app.standardizeDate(new Date(value))
+    $(this.input).data("DateTimePicker").date(date)
+   },
+   getValue: function () {
+    if (this.input.val() === "") {
+     return ""
+    }
+    let value = this.input.val()
+    let splits = value.split('/')
+    return new Date(splits[2], splits[1], splits[0])
+   }
+  },
+
+  crmv: { input: $('input[name=crmv]') },
+  medicResponsible: { input: $('input[name=medicResponsible]') },
+  comments: { input: $('textarea[name=comments]') },
+ };
+
+ //carrega animais
+ page.loadAnimals = async function () {
+  const owner = $('select[name=owner]').val();
+  return await $.post("/api/animals/filter-by-owner", { owner: owner }, async function (response) {
+   const animals = response.data
+   let append = '';
+   let a = false;
+   for (const key in animals) {
+    append += '<option value="' + animals[key]._id + '">' + animals[key].name + '</option>';
+    a = true;
+   }
+
+   $('select[name=animal]').html(append);
+   if (a)
+    $('select[name=animal]').removeAttr('disabled');
+   else
+    $('select[name=animal]').attr('disabled', true);
+
+   $('select[name=animal]').selectpicker('refresh');
+
+   return
+  });
+ }
+
+ //load page event
+ page.load = function () {
+  let id = app.getUrlParameter('id');
+  if (app.getUrlParameter('id')) {
+   $.get(page.requestURL + id, function (response) {
+    if (response.status === 'success') {
+     page.loadFieldsValues(response.data);
+    } else {
+     Swal.fire(
+      'Ocorreu algum problema!',
+      response.message,
+      'warning'
+     )
+    }
+   }).fail(function () {
+    Swal.fire(
+     'Ocorreu algum erro!',
+     'Não foi possivel obter esse registro.',
+     'error'
+    )
+   });
+  } else {
+   page.mask();
+  }
+ }
+
+ //Máscara campos
+ page.mask = function () {
+  $('input[name=crmv]').mask('00000')
+  let icons = {
+   time: "now-ui-icons tech_watch-time",
+   date: "now-ui-icons ui-1_calendar-60",
+   up: "fa fa-chevron-up",
+   down: "fa fa-chevron-down",
+   previous: 'now-ui-icons arrows-1_minimal-left',
+   next: 'now-ui-icons arrows-1_minimal-right',
+   today: 'fa fa-screenshot',
+   clear: 'fa fa-trash',
+   close: 'fa fa-remove'
+  }
+  $('input[name=startAt]').datetimepicker({
+   format: 'DD/MM/YYYY',
+   defaultDate: new Date(),
+   icons,
+  })
+  $('input[name=endAt]').datetimepicker({
+   format: 'DD/MM/YYYY',
+   icons,
+  })
+ }
+ page.load();
+</script>

@@ -18,6 +18,9 @@ const breedsRoute = require('./routes/api/breeds');
 const originsRoute = require('./routes/api/origins');
 const personsRoute = require('./routes/api/persons');
 const speciesRoute = require('./routes/api/species');
+const proceduresRoute = require('./routes/api/procedures');
+const proceduresPerformedRoute = require('./routes/api/proceduresPerformed');
+const clinicsRoute = require('./routes/api/clinics');
 const usersRoute = require('./routes/api/users');
 
 
@@ -70,6 +73,9 @@ app.use('/api/breeds', validateUser, breedsRoute);
 app.use('/api/origins', validateUser, originsRoute);
 app.use('/api/persons', validateUser, personsRoute);
 app.use('/api/species', validateUser, speciesRoute);
+app.use('/api/procedures', validateUser, proceduresRoute);
+app.use('/api/procedures-performed', validateUser, proceduresPerformedRoute);
+app.use('/api/clinics', validateUser, clinicsRoute);
 app.use('/api/users', usersRoute);
 
 app.get('/favicon.ico', function (req, res) {
@@ -78,12 +84,13 @@ app.get('/favicon.ico', function (req, res) {
 
 // user validation
 function validateUser(req, res, next) {
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'),async function (err, decoded) {
     if (err) {
       res.status(401).json({ message: err.message, data: null });
     } else {
       //Verify role of user.
-      if (!roles[decoded.role].hasPermission(req.originalUrl, req.method)) {
+      permission = await roles[decoded.role].hasPermission(req.originalUrl, req.method);
+      if (!permission) {
         res.status(403).json({ message: "Permissão insuficiente!", data: null });
       } else {
         // add user id to request

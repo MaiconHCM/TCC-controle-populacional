@@ -1,0 +1,122 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="content wow wow animate__fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">Informações da Clínica</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Nome da clínica</label>
+                <input name="name" type="text" class="form-control" placeholder="Insira o nome da clínica">
+              </div>
+            </div>
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Nome do médico responsável pela clínica</label>
+                <input name="medicResponsible" type="text" class="form-control" placeholder="Insira o nome do responsável">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 pr-1">
+              <div class="form-group">
+                <label>Email</label>
+                <input name="email" type="email" class="form-control" placeholder="Insira um email de contato">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Telefone</label>
+                <input name="telephone" type="tel" class="form-control" placeholder="Insira telefone de contato"
+                  value="">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Celular</label>
+                <input name="cellphone" type="tel" class="form-control" placeholder="Insira celular de contato"
+                  value="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>CEP</label>
+                <input name="cep" type="email" class="form-control" placeholder="Insira CEP da clínica">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Bairro</label>
+                <input name="neighborhood" type="text" class="form-control" placeholder="Insira o bairro da clínica"
+                  value="">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Logradouro</label>
+                <input name="address" type="text" class="form-control" placeholder="Insira o logradouro da clínica"
+                  value="">
+              </div>
+            </div>
+            <div class="col-md-3 pr-1">
+              <div class="form-group">
+                <label>Número</label>
+                <input name="number" type="number" class="form-control" placeholder="Insira o número da clínica"
+                  value="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 pr-1">
+              <div class="form-group">
+                <label>Cidade</label>
+                <input name="city" type="email" class="form-control" placeholder="Insira cidade">
+              </div>
+            </div>
+            <div class="col-md-4 pr-1">
+              <div class="form-group">
+                <label>Estado</label>
+                <input name="state" type="text" class="form-control" placeholder="Insira o estado">
+              </div>
+            </div>
+            <div class="col-md-4 pr-1">
+              <div class="form-group">
+                <label>Complemento</label>
+                <input name="complement" type="text" class="form-control" placeholder="Insira o complemento" value="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 pr-1">
+              <div class="form-group">
+                <label>CNPJ:</label>
+                <input name="cnpj" type="email" class="form-control" placeholder="Insira o CNPJ da empresa" value="">
+              </div>
+            </div>
+            <div class="col-md-4 pr-1">
+              <div class="form-group">
+                <label>CRMV:</label>
+                <input name="crmv" type="text" class="form-control" placeholder="Insira o CRVM da empresa" value="">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 pr-1 text-center">
+              <a href="/app/#/clinicas/" class="btn btn-lg btn-secondary"><i class="fas fa-arrow-left"></i>
+                Voltar</a>
+              <button class="btn btn-lg btn-primary" onclick="page.save()"><i class="fa fa-plus"></i>
+                Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("script/form") %>

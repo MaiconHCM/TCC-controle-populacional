@@ -2,7 +2,7 @@ class List {
   constructor(url) {
     this.requestURL = url
   }
-
+  entidy={}
   //Função do filtro.
   filter() {
     this.statusInfo();
@@ -29,6 +29,8 @@ class List {
     let a = '';
     for (const prop in data) {
       const item = data[prop];
+      this.entity[item._id]=item
+      alert('oi')
       a +=
         '<tr>' +
         '<td>' + item.name + '</td>' +
