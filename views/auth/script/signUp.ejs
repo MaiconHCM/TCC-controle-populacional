@@ -7,16 +7,16 @@
 
   $.post("/api/users/register", { name, password, email }, function (data) {
    if (data.status === 'success') {
-    $.post("/api/users/authenticate", { email, password }, function (data) {
+    $.post("/api/users/authenticate", { name, password }, function (data) {
      if (data.status === 'success') {
       window.localStorage.setItem('x-access-token', data.data.token);
       window.location.href = '/app/#/inicio';
      } else {
-      alert('error');
+      alert('to-do error');
      }
     });
    } else {
-    alert('error');
+    alert('to-do error');
    }
   });
  }
