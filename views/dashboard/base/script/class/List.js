@@ -35,7 +35,7 @@ class List {
         '<tr>' +
         '<td>' + item.name + '</td>' +
         '<td class="text-right">' +
-        '<a href="http://localhost:3000/app/#/especies/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
+        '<a href="/app/#/especies/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
         '<i class="fas fa-pencil-alt"></i> Editar' +
         '</a>' +
         '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
