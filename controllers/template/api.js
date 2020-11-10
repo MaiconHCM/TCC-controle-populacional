@@ -10,13 +10,13 @@ module.exports = function (model) {
       });
     },
 
-    getByIdArray:async function (id) {
-      data=null
+    getByIdArray: async function (id) {
+      data = null
       await model.findById(id, function (err, rtn) {
         if (err) {
-          data=null
+          data = null
         } else {
-          data=rtn
+          data = rtn
         }
       });
       return data
@@ -88,7 +88,7 @@ module.exports = function (model) {
         }
       });
     },
-    
+
 
     create: function (req, res, next) {
       //define autores da modificação
@@ -121,11 +121,19 @@ module.exports = function (model) {
       let params = {};
       //gera os parametros.
       for (const x in req.body) {
-        params[x] = { $regex: req.body[x], $options: 'i' };
+
+        if (typeof req.body[x] === 'object')
+          params[x] = req.body[x];
+        else
+          params[x] = { $regex: req.body[x], $options: 'i' };
+        
       }
+      
       //remove user id dos parametros.
       delete params['userId'];
+      
       let data = [];
+      console.log(params);
       model.find(params, function (err, listings) {
         if (err) {
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
@@ -137,5 +145,6 @@ module.exports = function (model) {
         }
       });
     },
+
   }
 };

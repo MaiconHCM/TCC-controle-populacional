@@ -3,12 +3,24 @@
   page.list = function (data) {
     let a = '';
     for (const prop in data) {
-      const item = data[prop];
-      const animal= app.variables.animals.find(x => x._id === data[prop].animal);
+      const item = data[prop]
+      const animal= app.variables.animals.find(x => x._id === data[prop].animal)
+      let startAt=new Date(item.startAt)
+      startAt= app.pad(startAt.getDate(), 2) + '/' + app.pad(startAt.getMonth() + 1, 2) + '/' + startAt.getFullYear()
+      let endAt;
+      if(item.endAt){
+        endAt=new Date(item.endAt)
+        endAt= app.pad(endAt.getDate(), 2) + '/' + app.pad(endAt.getMonth() + 1, 2) + '/' + endAt.getFullYear()
+      }else
+        endAt="Ativo"
+      
+
+      
       a +=
         '<tr>' +
         '<td>' + animal.name + '</td>' +
-        '<td>' + item.startAt + '</td>' +
+        '<td>' + startAt + '</td>' +
+        '<td>' + endAt + '</td>' +
         '<td colspan="2" class="text-right">' +
         '<a href="http://localhost:3000/app/#/procedimentos-realizados/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
         '<i class="fas fa-pencil-alt"></i> Editar' +
