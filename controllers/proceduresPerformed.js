@@ -29,7 +29,7 @@ controller.filter=async function (req, res, next){
  const proceduresPerformedcontroller=template(model)
 
  const user=await userController.getByIdArray(req.body.userId);
- if(user.role!==0)
+ if(user.role!==0&&user.role!==2)
   req.body.clinic=user.clinic
  proceduresPerformedcontroller.filter(req, res, next);
 }

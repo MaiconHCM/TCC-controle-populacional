@@ -41,6 +41,9 @@ class userRole {
     }
   }
   hasPermission(url, method) {
+    if (url.substr(url.length - 1)==='/')
+      url=url.slice(0, -1)
+
     let a = []
     switch (method) {
       case 'GET':
@@ -90,22 +93,49 @@ roles[1].addPermission('/api/animals/filter-by-owner')
 roles[1].addPermission('/app/inicio', ['GET'])
 roles[1].addPermission('/app/procedimentos-realizados', ['GET'])
 roles[1].addPermission('/app/procedimentos-realizados/form?', ['GET'])
+roles[1].addPermission('/app/procedimentos-realizados/view?', ['GET'])
 roles[1].addPermission('/app/', ['GET'])
 
 
 //SMMA Interno
 roles[2] = new userRole('SMMA Interno')
-roles[2].addPermission('/app', ['GET'])
-roles[2].addPermission('/app/animais', ['GET'])
+
+roles[2].addPermission('/api/procedures-performed/?')
+roles[2].addPermission('/api/animals/filter-by-owner')
 roles[2].addPermission('/api/animals', ['GET'])
+roles[2].addPermission('/api/animals/?', ['GET'])
 roles[2].addPermission('/api/animals/filter', ['POST'])
-
-roles[2].addPermission('/app/procedimentos', ['GET'])
 roles[2].addPermission('/api/procedures', ['GET'])
+roles[2].addPermission('/api/animals', ['GET'])
+roles[2].addPermission('/api/persons/?', ['GET'])
+roles[2].addPermission('/api/persons/filter', ['POST'])
+roles[2].addPermission('/api/clinics/filter', ['POST'])
+roles[2].addPermission('/api/clinics/?', ['GET'])
 
-roles[2].addPermission('/api/procedures-performed', ['GET'])
-roles[2].addPermission('/api/procedimentos-realizados', ['GET'])
+//inicio
+roles[2].addPermission('/app/', ['GET'])
+roles[2].addPermission('/app/inicio', ['GET'])
+
+//animais
+roles[2].addPermission('/app/animais', ['GET'])
+roles[2].addPermission('/app/animais/view?', ['GET'])
+
+//procedimentos-realizados
 roles[2].addPermission('/app/procedimentos-realizados', ['GET'])
+roles[2].addPermission('/app/procedimentos-realizados/view?', ['GET'])
+
+//clínicas
+roles[2].addPermission('/app/clinicas', ['GET'])
+roles[2].addPermission('/app/clinicas/view?', ['GET'])
+
+//pessoas
+roles[2].addPermission('/app/pessoas', ['GET'])
+roles[2].addPermission('/app/pessoas/view?', ['GET'])
+
+//Cidadão
+roles[3] = new userRole('Usuário')
+
+roles[3].addPermission('/app/inicio', ['GET'])
 
 //Administrador - Todas as funções.
 //Clinica - Cadastro de Procedimentos

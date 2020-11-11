@@ -109,7 +109,10 @@ app.generateMenu = function () {
       append = item.procedimentosrealizados;
       break;
     case 2:
-      append = item.inicio + item.animais + item.procedimentos + item.procedimentosrealizados;
+      append = item.inicio + item.animais + item.procedimentosrealizados + item.clinicas + item.pessoas;
+      break;
+    case 3:
+      append = item.inicio;
       break;
   }
   $('#sidebar-wrapper > ul').html(append);

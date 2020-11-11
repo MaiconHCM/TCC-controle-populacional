@@ -4,16 +4,29 @@
     let a = '';
     for (const prop in data) {
       const item = data[prop];
+      
+      let btnView =
+        '<a href="/app/#/animais/view?id=' + item._id + '" class="btn btn-info btn-link btn-sm">' +
+        '<i class="fas fa-eye"></i> Visualizar' +
+        '</a>'
+      let btnDelete = ""
+      let btnEdit = ""
+      if (window.localStorage.getItem('role') == 0) {
+        btnEdit =
+          '<a href="/app/#/animais/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
+          '<i class="fas fa-pencil-alt"></i> Editar' +
+          '</a>'
+        btnDelete =
+          '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
+          '<i class="fas fa-trash"></i> Apagar' +
+          '</button>'
+      }
+
       a +=
         '<tr>' +
         '<td>' + item.name + '</td>' +
         '<td colspan="2" class="text-right">' +
-        '<a href="/app/#/animais/form?id=' + item._id + '" class="btn btn-primary btn-link btn-sm">' +
-        '<i class="fas fa-pencil-alt"></i> Editar' +
-        '</a>' +
-        '<button onclick="page.delete(\'' + item._id + '\')" type="button" rel="tooltip" class="btn btn-danger btn-link btn-sm">' +
-        '<i class="fas fa-trash"></i> Apagar' +
-        '</button>' +
+        btnView + btnEdit + btnDelete +
         '</td>' +
         '</tr>';
     }

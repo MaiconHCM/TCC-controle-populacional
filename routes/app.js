@@ -40,7 +40,6 @@ router.get('/animais', validateUser, async function (req, res, next) {
  } catch (e) { console.log(e) }
 
 });
-
 router.get('/animais/form', validateUser, async function (req, res, next) {
  try {
   let species = await speciesController.getAllArray();
@@ -49,6 +48,17 @@ router.get('/animais/form', validateUser, async function (req, res, next) {
   let persons = await personsController.getAllArray();
   res.render('dashboard/animals/form', { species, origins, persons }, function (err, html) {
    res.json({ title: 'Formulário Animais', variables: { breeds }, html });
+  });
+ } catch (e) { console.log(e) }
+});
+router.get('/animais/view', validateUser, async function (req, res, next) {
+ try {
+  let species = await speciesController.getAllArray();
+  let breeds = await breedsController.getAllArray();
+  let origins = await originsController.getAllArray();
+  let persons = await personsController.getAllArray();
+  res.render('dashboard/animals/form', { species, origins, persons }, function (err, html) {
+   res.json({ title: 'Formulário Animais', variables: { breeds, view: true }, html });
   });
  } catch (e) { console.log(e) }
 });
@@ -106,6 +116,11 @@ router.get('/pessoas/form', validateUser, function (req, res, next) {
   res.json({ title: 'Formulário Pessoas', html });
  });
 });
+router.get('/pessoas/view', validateUser, function (req, res, next) {
+ res.render('dashboard/persons/form', {}, function (err, html) {
+  res.json({ title: 'Formulário Pessoas', variables: { view: true }, html });
+ });
+});
 
 //procedimentos
 router.get('/procedimentos', validateUser, function (req, res, next) {
@@ -119,27 +134,37 @@ router.get('/procedimentos/form', validateUser, function (req, res, next) {
  });
 });
 
+
 //Clínicas
+//index
 router.get('/clinicas', validateUser, function (req, res, next) {
  res.render('dashboard/clinics/index', {}, function (err, html) {
   res.json({ title: 'Clínicas', html });
  });
 });
+//create/edit
 router.get('/clinicas/form', validateUser, function (req, res, next) {
  res.render('dashboard/clinics/form', {}, function (err, html) {
   res.json({ title: 'Formulário Clínicas', html });
  });
 });
+//view
+router.get('/clinicas/view', validateUser, function (req, res, next) {
+ res.render('dashboard/clinics/form', {}, function (err, html) {
+  res.json({ title: 'Visualizar Clínica',variables: { view: true  }, html });
+ });
+});
 
 //Procedimentos Realizados
+//index
 router.get('/procedimentos-realizados', validateUser, async function (req, res, next) {
  let animals = await animalsController.getAllArray();
- animals = removeInfo(animals,['_id','name'])
+ animals = removeInfo(animals, ['_id', 'name'])
  res.render('dashboard/proceduresPerformed/index', {}, function (err, html) {
   res.json({ title: 'Procedimentos realizados', variables: { animals }, html });
  });
 });
-
+//create/edit
 router.get('/procedimentos-realizados/form', validateUser, async function (req, res, next) {
  try {
   let procedures = await proceduresController.getAllArray()
@@ -150,8 +175,20 @@ router.get('/procedimentos-realizados/form', validateUser, async function (req, 
   });
  } catch (e) { console.log(e) }
 });
+//view
+router.get('/procedimentos-realizados/view', validateUser, async function (req, res, next) {
+ try {
+  let procedures = await proceduresController.getAllArray()
+  let persons = await personsController.getAllArray()
 
-//Pessoas
+  res.render('dashboard/proceduresPerformed/form', { procedures, persons}, function (err, html) {
+   res.json({ title: 'Formulário Procedimentos realizados',variables: { view: true  }, html });
+  });
+ } catch (e) { console.log(e) }
+});
+
+
+//usuários
 router.get('/usuarios', validateUser, function (req, res, next) {
  res.render('dashboard/users/index', {}, function (err, html) {
   res.json({ title: 'Usuários', html });
@@ -162,6 +199,8 @@ router.get('/usuarios/form', validateUser, function (req, res, next) {
   res.json({ title: 'Formulário do usuário', html });
  });
 });
+
+
 
 //Páginas padrões
 router.get('/404', validateUser, function (req, res, next) {
@@ -174,6 +213,7 @@ router.get('/403', function (req, res, next) {
   res.json({ title: 'Erro 403', html });
  });
 });
+
 
 
 ///Funções
@@ -202,7 +242,7 @@ function removeInfo(array, keys) {
 
    for (let index1 = 0; index1 < keys.length; index1++) {
     if (key === keys[index1]) {
-     newObject[key]=object[key];
+     newObject[key] = object[key];
      break
     }
    }

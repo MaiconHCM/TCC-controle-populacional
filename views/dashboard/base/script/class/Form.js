@@ -47,6 +47,23 @@ class Form {
     this.mask();
     return list;
   }
+  view() {
+    console.log(app.variables);
+    if (app.variables.view) {
+      $('.form-group input').each(function () {
+        $(this).replaceWith($('<p>' + this.value + '</p>'));
+      })
+      $('select').each(function () {
+        let text = $(this).find("option:selected").text()
+        $(this).parent().html('<p>' + text + '</p>')
+      })
+      $('textarea').each(function () {
+        $(this).replaceWith($('<p>' + this.value + '</p>'));
+      })
+      $('.btn-primary').remove();
+    }
+  }
+
   //Save event
   save() {
     if (this.validadeNull()) {
@@ -76,6 +93,7 @@ class Form {
         await this.fields[key].input.val(data[key]);
       }
     }
+    page.view();
   }
 
   //new event
