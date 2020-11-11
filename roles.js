@@ -86,7 +86,7 @@ roles[0].addPermission()
 
 //Clínica
 roles[1] = new userRole('Cliníca')
-roles[1].addPermission('/api/procedures-performed/?')
+roles[1].addPermission('/api/procedures-performed?')
 roles[1].addPermission('/api/procedures-performed/filter')
 roles[1].addPermission('/api/animals/filter-by-owner')
 

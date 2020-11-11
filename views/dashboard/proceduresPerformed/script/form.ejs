@@ -29,8 +29,11 @@
   endAt: {
    input: $('input[name=endAt]'),
    setValue: function (value) {
-    let date = app.standardizeDate(new Date(value))
-    $(this.input).data("DateTimePicker").date(date)
+    if(value){
+     let date = app.standardizeDate(new Date(value))
+     $(this.input).data("DateTimePicker").date(date)
+    }
+    
    },
    getValue: function () {
     if (this.input.val() === "") {
