@@ -30,6 +30,7 @@ app.set('view engine', 'ejs');
 app.set('layout', false);
 // jwt secret token
 app.set('secretKey', 'Pato Branco (16/07/2020)');
+app.set('port', process.env.PORT || port);
 
 // DB connection
 const mongoose = require("mongoose");
