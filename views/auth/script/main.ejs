@@ -1,9 +1,25 @@
 <script>
  new WOW().init();
-
- loading = '<style>*,body,html{padding:0;margin:0;box-sizing:border-box;font-family:Poppins,sans-serif;perspective:800px}::selection{background-color:#2d98da;color:#fff}body{background-color:#fff;display:flex;justify-content:center;align-items:center;width:100%;min-height:100vh}.Box{position:relative;width:123px;height:123px;background-color:#204065;border:5px solid #204095;box-shadow:0 0 10px rgba(0,0,0,.2);transform-style:preserve-3d;transform-origin:center;transform:rotate(45deg);display:flex;flex-wrap:wrap;box-sizing:content-box}.Box span{width:40px;height:40px;background:#fff;box-sizing:content-box;margin:.5px;transform-style:preserve-3d;transform-origin:center;animation:Loader 2s linear infinite}.Box span:nth-child(3){animation-delay:.8s}.Box span:nth-child(2),.Box span:nth-child(6){animation-delay:.6s}.Box span:last-child,.Box span:nth-child(1),.Box span:nth-child(5){animation-delay:.4s}.Box span:nth-child(4),.Box span:nth-child(8){animation-delay:.2s}.Box span:nth-child(7){animation-delay:0s}@keyframes Loader{0%,100%{transform:scale(1)}30%{transform:scale(0)}50%{transform:scale(0)}75%{transform:scale(1)}}</style>'
- loading += '<div class="Box"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>'
-
+loading=
+'<main class="d-flex w-100">'+
+' <div class="container d-flex flex-column">'+
+'  <div class="row vh-100">'+
+'   <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">'+
+'    <div class="d-table-cell align-middle wow animate__fadeIn">'+
+'     <div class="card">'+
+'      <div class="card-body">'+
+'       <div class="m-sm-4" style="display:flex;justify-content: center;">'+
+'       <div class="loader wow animate__fadeIn"><div class="loader-wheel"></div><div class="loader-text"></div></div>'+
+'       </div>'+
+'      </div>'+
+'     </div>'+
+'    </div>'+
+'   </div>'+
+'  </div>'+
+' </div>'+
+'</main>';
+	
+ 
  app = {};
  //salva pagina para evitar gasto de dados
  app.cache = {};
