@@ -30,12 +30,14 @@ app.set('view engine', 'ejs');
 app.set('layout', false);
 // jwt secret token
 app.set('secretKey', 'Pato Branco (16/07/2020)');
-app.set('port', process.env.PORT || port);
+app.set('port', port);
 
 // DB connection
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Listing', {
+//'mongodb+srv://SMMA-APP:SMMA-08-APP-04@cluster0.62fbu.mongodb.net/SMMA?retryWrites=true&w=majority'
+//'mongodb://localhost/Listing'
+mongoose.connect('mongodb+srv://SMMA-APP:SMMA-08-APP-04@cluster0.62fbu.mongodb.net/SMMA?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
@@ -85,7 +87,7 @@ app.get('/favicon.ico', function (req, res) {
 
 // user validation
 function validateUser(req, res, next) {
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'),async function (err, decoded) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), async function (err, decoded) {
     if (err) {
       res.status(401).json({ message: err.message, data: null });
     } else {

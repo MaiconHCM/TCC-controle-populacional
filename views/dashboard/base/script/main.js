@@ -1,21 +1,21 @@
 app = {};
-loading = 
-'<div class="panel-header panel-header-sm"></div>'+
-'<div class="content wow animate__fadeInUp">'+
-' <div class="row">'+
-'  <div class="card col-sm-10 col-md-8 col-lg-6 mx-auto ">'+
-'   <div class="card-body">'+
-'    <div style="display:flex;justify-content: center;">'+
-'     <div class="loader">'+
-'      <div class="loader-wheel"></div>'+
-'      <div class="loader-text"></div>'+
-'     </div>'+
-'    </div>'+
-'   </div>'+
-'  </div>'+
-' </div>'+
-'</div>';
-	
+loading =
+  '<div class="panel-header panel-header-sm"></div>' +
+  '<div class="content wow animate__fadeInUp">' +
+  ' <div class="row">' +
+  '  <div class="card col-sm-10 col-md-8 col-lg-6 mx-auto ">' +
+  '   <div class="card-body">' +
+  '    <div style="display:flex;justify-content: center;">' +
+  '     <div class="loader">' +
+  '      <div class="loader-wheel"></div>' +
+  '      <div class="loader-text"></div>' +
+  '     </div>' +
+  '    </div>' +
+  '   </div>' +
+  '  </div>' +
+  ' </div>' +
+  '</div>';
+
 
 
 //salva pagina para evitar gasto de dados

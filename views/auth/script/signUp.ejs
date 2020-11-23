@@ -12,11 +12,19 @@
       window.localStorage.setItem('x-access-token', data.data.token);
       window.location.href = '/app/#/inicio';
      } else {
-      alert('to-do error');
+      Swal.fire(
+       'Atenção!',
+       response.message,
+       'warning'
+      )
      }
     });
    } else {
-    alert('to-do error');
+    Swal.fire(
+     'Atenção!',
+     response.message,
+     'warning'
+    )
    }
   });
  }

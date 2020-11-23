@@ -48,27 +48,27 @@ module.exports = function (model) {
       });
       return data;
     },
-
+    // Atualiza por id
     updateById: function (req, res, next) {
-      //define autores da modificação
+      // Cria objeto JSON e define autores da modificação
       const author = { updateBy: req.body.userId, updateAt: new Date().toISOString() };
 
-      //adiciona cria variavel params e define autores e informações do body
+      // Cria variavel params define informações do body e usuários autores da atualização.
       let params = Object.assign(req.body, author);
 
-      //remove array
-      const a = params;
-      for (const key in a) {
+      // Tratamento de array.
+      const auxParams = params;
+      for (const key in auxParams) {
         if (key.indexOf('[]') !== -1) {
-          let value = a[key];
-          if (a[key] === '')
+          let value = auxParams[key];
+          if (auxParams[key] === '')
             value = []
           params[key.replace('[]', '')] = value;
           delete params[key];
         }
       }
 
-      //encontra modelo e atualiza
+      // Atualiza documento
       model.findByIdAndUpdate(req.params.id, params, function (err, listingInfo) {
         if (err) {
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
@@ -79,39 +79,48 @@ module.exports = function (model) {
     },
 
     deleteById: function (req, res, next) {
-      //apaga pelo id
+      // Apaga pelo id
       model.findByIdAndRemove(req.params.id, function (err, listingInfo) {
-        if (err)
+        if (err) {
+          //  retorna JSON com mensagem de erro
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
-        else {
+        } else {
+
+          //  Retorna JSON com mensagem de sucesso.
           res.json({ status: "success", message: "Registro apagado com sucesso.", data: null });
         }
       });
     },
 
-
+    // Função de criação de registros
     create: function (req, res, next) {
-      //define autores da modificação
-      const author = { createBy: req.body.userId, updateBy: req.body.userId };
+      // Cria objeto JSON e define autores da modificação
+      const author = {
+        createBy: req.body.userId,
+        updateBy: req.body.userId
+      };
 
-      //adiciona cria variavel params e define autores e informações do body
+      // Cria variavel params define informações do body e usuários autores da criação.
       let params = Object.assign(req.body, author);
 
-      //remove array
-      let a = params;
-      for (const key in a) {
+      // Tratamento de array.
+      let auxParams = params;
+      for (const key in auxParams) {
         if (key.indexOf('[]') !== -1) {
-          params[key.replace('[]', '')] = a[key];
+          params[key.replace('[]', '')] = auxParams[key];
           delete params[key];
         }
       }
 
-      //Cria modelo
+      // Cria um novo modelo usando mongosse 
       model.create(params, function (err, result) {
         if (err) {
+          // Exibe erro no console.
           console.log(err)
+          // Retorna um objeto JSON com o erro.
           res.json({ status: "error", message: "Entre em contato com administradores do sistema.", data: null });
         } else
+          // Retorna um objeto JSON com sucesso.
           res.json({ status: "success", message: "Registro adicionado com sucesso.", data: null });
       });
     },
@@ -126,12 +135,12 @@ module.exports = function (model) {
           params[x] = req.body[x];
         else
           params[x] = { $regex: req.body[x], $options: 'i' };
-        
+
       }
-      
+
       //remove user id dos parametros.
       delete params['userId'];
-      
+
       let data = [];
       console.log(params);
       model.find(params, function (err, listings) {

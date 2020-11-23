@@ -27,40 +27,71 @@ module.exports = {
     });
   },
 
-  //CreateClinic
+  // Criar usuário do tipo clínica
   createClinicUser: function (req, res, next) {
+
+    // Define o usuário
     let user = {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password
     }
-    //Coloca de acordo a role clinica
+    // Coloca de acordo a role clinica
     user.role = 1
+    // Define a clínica
     user.clinic = req.body.clinic
 
+    //Usando o model de usuário, realiza o salvamento
     userModel.create(user, function (err, result) {
       if (err)
         next(err);
-      else
-        res.json({ status: "success", message: "Usuário da clínica adicionado com sucesso!", data: null });
-
+      else {
+        res.json({
+          status: "success",
+          message: "Usuário da clínica adicionado com sucesso!",
+          data: null
+        });
+      }
     });
   },
 
   authenticate: function (req, res, next) {
+
+    // Utilizando regex para ignorar a diferença entre maiúsculas e minúsculas no nome de usuário.
     let name = { $regex: new RegExp("^" + req.body.name, "i") }
+
+    // Buscando o usuário no banco.
     userModel.findOne({ name }, function (err, userInfo) {
+
       if (err) {
+        // Caso retorne erro, ele procede para exibir o erro
         next(err);
+
       } else if (userInfo) {
+
+        // É feito a comparação pelo bcrypt entre senha fornecida e senha criptografada no banco
         if (bcrypt.compareSync(req.body.password, userInfo.password)) {
-          const token = jwt.sign({ id: userInfo._id, name: userInfo.name, email: userInfo.email, role: userInfo.role }, req.app.get('secretKey'), { expiresIn: '1h' });
-          res.json({ status: "success", message: "user found!", data: { token, name: userInfo.name, role: userInfo.role } });
+
+          //Caso usuario e senha coincidir, será criado um token incluindo outras informações.
+          const token = jwt.sign(
+            { id: userInfo._id, name: userInfo.name, email: userInfo.email, role: userInfo.role },
+            req.app.get('secretKey'),
+            { expiresIn: '1h' });
+
+          //É feito o retorno em JSON com o token criado, o nome de usuário e sua role.
+          res.json({
+            status: "success",
+            message: "Usuário encontrado!",
+            data: { token, name: userInfo.name, role: userInfo.role }
+          });
+
         } else {
-          res.json({ status: "error", message: "Nome de usuário ou senha incorreto!", data: null });
+          // Caso a senha não coincidir, informa erro ao usuário por meio de um retorno JSON
+          res.json({ status: "error", message: "Nome de usuário ou senha incorreto.", data: null });
         }
       } else {
-        res.json({ status: "error", message: "Nome de usuário ou senha incorreto!", data: null });
+        // Caso não encontre o usuário, informa ao usuário por meio de um retorno JSON
+        res.json({ status: "error", message: "Nome de usuário ou senha incorreto.", data: null });
       }
     });
   },

@@ -28,16 +28,39 @@ router.get('/meu-perfil', validateUser, function (req, res, next) {
  });
 });
 
-//Animais
+// Rota para listagem de Animais
 router.get('/animais', validateUser, async function (req, res, next) {
  try {
+  // Carrega primeira dependência, obtem lista de espécies.
   let species = await speciesController.getAllArray();
+
+  // Carrega segunda depedência, obtem lista de raças.
   let breeds = await breedsController.getAllArray();
+
+  // Carrega terceira dependência, obtem lista de origens.
   let origins = await originsController.getAllArray();
+
+  // Com a função render, cria documento HTML apartir de um EJS
   res.render('dashboard/animals/index', {}, function (err, html) {
-   res.json({ title: 'Animais', variables: { species, breeds, origins }, html });
+
+   // Após documento HTML ser gerado com sucesso:
+   // É retornado um json contendo: 
+   // o título da página,
+   // as coleções de items que vão ser utilizadas,
+   // e o html da página.
+
+   res.json({
+    title: 'Animais',
+    variables: { species, breeds, origins },
+    html
+   });
+
   });
- } catch (e) { console.log(e) }
+
+ } catch (e) {
+  //Exibe erro no console do servidor.
+  console.log(e)
+ }
 
 });
 router.get('/animais/form', validateUser, async function (req, res, next) {
@@ -151,7 +174,7 @@ router.get('/clinicas/form', validateUser, function (req, res, next) {
 //view
 router.get('/clinicas/view', validateUser, function (req, res, next) {
  res.render('dashboard/clinics/form', {}, function (err, html) {
-  res.json({ title: 'Visualizar Clínica',variables: { view: true  }, html });
+  res.json({ title: 'Visualizar Clínica', variables: { view: true }, html });
  });
 });
 
@@ -181,8 +204,8 @@ router.get('/procedimentos-realizados/view', validateUser, async function (req, 
   let procedures = await proceduresController.getAllArray()
   let persons = await personsController.getAllArray()
 
-  res.render('dashboard/proceduresPerformed/form', { procedures, persons}, function (err, html) {
-   res.json({ title: 'Formulário Procedimentos realizados',variables: { view: true  }, html });
+  res.render('dashboard/proceduresPerformed/form', { procedures, persons }, function (err, html) {
+   res.json({ title: 'Formulário Procedimentos realizados', variables: { view: true }, html });
   });
  } catch (e) { console.log(e) }
 });
